@@ -72,6 +72,7 @@ class DeleteReporter(ClientIDMutation):
 
         _, id = from_global_id(input['id'])
 
-        reporter = Reporter.objects.get(id=id).delete()
+        reporter = Reporter.objects.get(id=id)
+        reporter.delete()
 
         return DeleteReporter(reporter=reporter)

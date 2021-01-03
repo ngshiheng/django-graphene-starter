@@ -6,6 +6,8 @@ verify_ssl = true
 [dev-packages]
 autopep8 = "*"
 pylint-django = "*"
+pytest-django = "*"
+mixer = "*"
 
 [packages]
 django = "*"
