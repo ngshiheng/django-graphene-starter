@@ -2,8 +2,8 @@ from graphene import Int
 from graphene.relay import Connection, Node
 from graphene_django import DjangoObjectType
 
-from .filters import ReporterFilter
-from .models import Reporter
+from .filters import PublicationFilter, ReporterFilter
+from .models import Publication, Reporter
 
 
 class CountableConnectionBase(Connection):
@@ -25,4 +25,12 @@ class ReporterNode(DjangoObjectType):
         model = Reporter
         interfaces = (Node,)
         filterset_class = ReporterFilter
+        connection_class = CountableConnectionBase
+
+
+class PublicationNode(DjangoObjectType):
+    class Meta:
+        model = Publication
+        interfaces = (Node,)
+        filterset_class = PublicationFilter
         connection_class = CountableConnectionBase

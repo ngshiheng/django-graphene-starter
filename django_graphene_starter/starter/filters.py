@@ -1,7 +1,7 @@
 
 from django_filters import FilterSet, OrderingFilter
 
-from .models import Reporter
+from .models import Publication, Reporter
 
 
 class ReporterFilter(FilterSet):
@@ -14,5 +14,17 @@ class ReporterFilter(FilterSet):
             ('email'),
             ('first_name'),
             ('last_name'),
+        )
+    )
+
+
+class PublicationFilter(FilterSet):
+    class Meta:
+        model = Publication
+        fields = ['title']
+
+    order_by = OrderingFilter(
+        fields=(
+            ('title'),
         )
     )
