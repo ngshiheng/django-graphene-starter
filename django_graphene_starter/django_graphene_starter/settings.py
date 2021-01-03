@@ -110,5 +110,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 GRAPHENE = {
-    'SCHEMA': 'django_graphene_starter.schema.schema'
+    'RELAY_CONNECTION_MAX_LIMIT': 1000,
+    'SCHEMA': 'django_graphene_starter.schema.schema',
 }

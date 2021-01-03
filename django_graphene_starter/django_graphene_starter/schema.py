@@ -1,17 +1,20 @@
-import graphene
+import starter.schema
+from graphene import Field, ObjectType, Schema
 from graphene_django.debug import DjangoDebug
 
 
 class Query(
-    graphene.ObjectType,
+    starter.schema.Query,
+    ObjectType,
 ):
-    debug = graphene.Field(DjangoDebug, name='_debug')
+    debug = Field(DjangoDebug, name='_debug')
 
 
 class Mutation(
-    graphene.ObjectType,
+    starter.schema.Mutation,
+    ObjectType,
 ):
     pass
 
 
-schema = graphene.Schema(query=Query)
+schema = Schema(query=Query, mutation=Mutation)
