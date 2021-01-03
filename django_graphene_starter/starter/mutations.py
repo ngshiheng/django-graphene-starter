@@ -2,8 +2,8 @@ from graphene import ID, ClientIDMutation, Field, String
 from graphql import GraphQLError
 from graphql_relay import from_global_id
 
-from .models import Publication, Reporter
-from .types import PublicationNode, ReporterNode
+from .models import Article, Publication, Reporter
+from .types import ArticleNode, PublicationNode, ReporterNode
 
 
 # Reporter
@@ -137,3 +137,67 @@ class DeletePublication(ClientIDMutation):
         publication.delete()
 
         return DeletePublication(publication=publication)
+
+
+# Article
+# ^^^^^^^
+class CreateArticle(ClientIDMutation):
+    article = Field(ArticleNode)
+
+    class Input:
+        reporter_id = ID(required=True)
+        headline = String(required=True)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+
+        headline = input['headline']
+
+        _, reporter_id = from_global_id(input['reporter_id'])
+
+        reporter = Reporter.objects.get(id=reporter_id)
+
+        article = Article.objects.create(headline=headline, reporter=reporter)
+
+        return CreateArticle(article=article)
+
+
+class UpdateArticle(ClientIDMutation):
+    article = Field(ArticleNode)
+
+    class Input:
+        id = ID(required=True, description='ID of the Article to be updated.')
+        headline = String()
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+
+        _, id = from_global_id(input['id'])
+
+        article = Article.objects.get(id=id)
+
+        for field, value in input.items():
+            if field != 'id':
+                setattr(article, field, value)
+
+        article.full_clean()
+        article.save()
+
+        return UpdateArticle(article=article)
+
+
+class DeleteArticle(ClientIDMutation):
+    article = Field(ArticleNode)
+
+    class Input:
+        id = ID(required=True, description='ID of the Article to be deleted.')
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+
+        _, id = from_global_id(input['id'])
+
+        article = Article.objects.get(id=id)
+        article.delete()
+
+        return DeleteArticle(article=article)

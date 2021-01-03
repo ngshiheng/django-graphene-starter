@@ -22,7 +22,7 @@ class Publication(models.Model):
 
 class Article(models.Model):
     headline = models.CharField(max_length=256)
-    pub_date = models.DateField()
+    pub_date = models.DateField(auto_now_add=True)
     reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE)
     publications = models.ManyToManyField(Publication)
 
