@@ -8,6 +8,8 @@ autopep8 = "*"
 pylint-django = "*"
 pytest-django = "*"
 mixer = "*"
+pytest-cov = "*"
+flake8 = "*"
 
 [packages]
 django = "*"
