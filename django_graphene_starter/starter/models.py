@@ -23,8 +23,8 @@ class Publication(models.Model):
 class Article(models.Model):
     headline = models.CharField(max_length=256)
     pub_date = models.DateField(auto_now_add=True)
-    reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE)
-    publications = models.ManyToManyField(Publication)
+    reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE, related_name='articles')
+    publications = models.ManyToManyField(Publication, related_name='articles')
 
     def __str__(self):
         return self.headline
