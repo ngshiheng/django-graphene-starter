@@ -24,7 +24,7 @@ A GraphQL, Django server boilerplate built with Graphene.
 
 This project is developed using [Insomnia REST Client](https://insomnia.rest/) which is an alternative to Postman.
 
-To ease development work, you may import all the available GraphQL mutations and queries [here](https://gist.github.com/ngshiheng/ad28bbf3147427111fe28d69e3e62fef) to your Insomnia workspace directly.
+To ease development work, the latest GraphQL mutations and queries can be found [here](https://gist.github.com/ngshiheng/ad28bbf3147427111fe28d69e3e62fef). Just import this configuration file to your Insomnia workspace and start making API calls!
 
 ## Installing dependencies
 
@@ -37,7 +37,10 @@ pipenv install --dev
 ### Running the server locally
 
 ```sh
+# Database migration
 pipenv run python django_graphene_starter/manage.py migrate
+
+# Run GraphQL server at localhost:8000
 pipenv run python3 django_graphene_starter/manage.py runserver
 ```
 
@@ -49,6 +52,8 @@ pipenv run pytest django_graphene_starter
 
 ### Generating fixtures
 
+[mixer](https://github.com/klen/mixer) is used to generate fixtures for this project.
+
 ```sh
 # To generate fixtures
 python django_graphene_starter/manage.py generate_fixtures
@@ -56,8 +61,6 @@ python django_graphene_starter/manage.py generate_fixtures
 # To delete all data
 python django_graphene_starter/manage.py flush
 ```
-
-## GraphQL Queries and Mutations
 
 # Contributing
 
