@@ -71,8 +71,10 @@ class ReporterTestCase(GraphQLTestCase):
     def setUp(self):
         self.reporter1 = mixer.blend(Reporter)
         self.reporter2 = mixer.blend(Reporter)
+        mixer.cycle(5).blend(Reporter)
 
     def test_reporters_query(self):
+
         response = self.query(
           REPORTERS_QUERY,
           op_name='reporters',
@@ -80,19 +82,23 @@ class ReporterTestCase(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
 
-        self.assertEqual(len(content['data']['reporters']['edges']), 2)
-        self.assertEqual(content['data']['reporters']['totalCount'], 2)
+        self.assertEqual(len(content['data']['reporters']['edges']), 7)
+        self.assertEqual(content['data']['reporters']['totalCount'], 7)
 
     def test_create_reporter_mutation(self):
+
+        first_name = mixer.faker.first_name()
+        last_name = mixer.faker.last_name()
+        email = mixer.faker.email()
 
         response = self.query(
           CREATE_REPORTER_MUTATION,
           op_name='createReporter',
           variables={
             'input': {
-              'firstName': 'Jack',
-              'lastName': 'Dorsey',
-              'email': 'jack@example.com',
+              'firstName': first_name,
+              'lastName': last_name,
+              'email': email,
             }
           }
         )
@@ -100,13 +106,16 @@ class ReporterTestCase(GraphQLTestCase):
         content = json.loads(response.content)
 
         self.assertIsNotNone(content['data']['createReporter']['reporter']['id'])
-        self.assertEqual(content['data']['createReporter']['reporter']['firstName'], 'Jack')
-        self.assertEqual(content['data']['createReporter']['reporter']['lastName'], 'Dorsey')
-        self.assertEqual(content['data']['createReporter']['reporter']['email'], 'jack@example.com')
+        self.assertEqual(content['data']['createReporter']['reporter']['firstName'], first_name)
+        self.assertEqual(content['data']['createReporter']['reporter']['lastName'], last_name)
+        self.assertEqual(content['data']['createReporter']['reporter']['email'], email)
 
     def test_update_reporter_mutation(self):
 
         id = to_global_id('ReporterNode', self.reporter1.id)
+        first_name = mixer.faker.first_name()
+        last_name = mixer.faker.last_name()
+        email = mixer.faker.email()
 
         response = self.query(
           UPDATE_REPORTER_MUTATION,
@@ -114,9 +123,9 @@ class ReporterTestCase(GraphQLTestCase):
           variables={
             'input': {
               'id': id,
-              'firstName': 'Elon',
-              'lastName': 'Musk',
-              'email': 'elonmusk@example.com',
+              'firstName': first_name,
+              'lastName': last_name,
+              'email': email,
             }
           }
         )
@@ -124,9 +133,9 @@ class ReporterTestCase(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
         self.assertEqual(content['data']['updateReporter']['reporter']['id'], id)
-        self.assertEqual(content['data']['updateReporter']['reporter']['firstName'], 'Elon')
-        self.assertEqual(content['data']['updateReporter']['reporter']['lastName'], 'Musk')
-        self.assertEqual(content['data']['updateReporter']['reporter']['email'], 'elonmusk@example.com')
+        self.assertEqual(content['data']['updateReporter']['reporter']['firstName'], first_name)
+        self.assertEqual(content['data']['updateReporter']['reporter']['lastName'], last_name)
+        self.assertEqual(content['data']['updateReporter']['reporter']['email'], email)
 
     def test_delete_reporter_mutation(self):
         another_reporter_id = to_global_id('ReporterNode', self.reporter2.id)
