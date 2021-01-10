@@ -65,6 +65,7 @@ class PublicationTestCase(GraphQLTestCase):
     def setUp(self):
         self.publication1 = mixer.blend(Publication)
         self.publication2 = mixer.blend(Publication)
+        mixer.cycle(10).blend(Publication)
 
     def test_publications_query(self):
         response = self.query(
@@ -74,17 +75,19 @@ class PublicationTestCase(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
 
-        self.assertEqual(len(content['data']['publications']['edges']), 2)
-        self.assertEqual(content['data']['publications']['totalCount'], 2)
+        self.assertEqual(len(content['data']['publications']['edges']), 12)
+        self.assertEqual(content['data']['publications']['totalCount'], 12)
 
     def test_create_publication_mutation(self):
+
+        title = mixer.faker.catch_phrase()
 
         response = self.query(
           CREATE_PUBLICATION_MUTATION,
           op_name='createPublication',
           variables={
             'input': {
-              'title': 'Reverse-engineered intangible application',
+              'title': title,
             }
           }
         )
@@ -92,7 +95,7 @@ class PublicationTestCase(GraphQLTestCase):
         content = json.loads(response.content)
 
         self.assertIsNotNone(content['data']['createPublication']['publication']['id'])
-        self.assertEqual(content['data']['createPublication']['publication']['title'], 'Reverse-engineered intangible application')
+        self.assertEqual(content['data']['createPublication']['publication']['title'], title)
 
     def test_update_publication_mutation(self):
 

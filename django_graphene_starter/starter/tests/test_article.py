@@ -14,7 +14,32 @@ query articles {
     edges {
       node {
         id
+        publications {
+          totalCount
+          edges {
+            node {
+              id
+            }
+          }
+        }
       }
+    }
+  }
+}
+'''
+
+ARTICLE_QUERY = '''
+query article($id: ID!) {
+  article(id: $id) {
+    id
+    reporter {
+      id
+      firstName
+      lastName
+      email
+    }
+    publications {
+      totalCount
     }
   }
 }
@@ -63,10 +88,19 @@ class ArticleTestCase(GraphQLTestCase):
     GRAPHQL_URL = '/graphql'
 
     def setUp(self):
-        self.article1 = mixer.blend(Article, publications=[mixer.blend(Publication)])
-        self.article2 = mixer.blend(Article, publications=[mixer.blend(Publication)])
         self.reporter1 = mixer.blend(Reporter)
         self.reporter2 = mixer.blend(Reporter)
+
+        self.article1 = mixer.blend(
+          Article,
+          publications=[mixer.blend(Publication)],
+          reporter=self.reporter1,
+        )
+        self.article2 = mixer.blend(
+          Article,
+          publications=(mixer.cycle(5).blend(Publication)),
+          reporter=self.reporter2,
+        )
 
     def test_articles_query(self):
         response = self.query(
@@ -78,6 +112,27 @@ class ArticleTestCase(GraphQLTestCase):
 
         self.assertEqual(len(content['data']['articles']['edges']), 2)
         self.assertEqual(content['data']['articles']['totalCount'], 2)
+        self.assertEqual(len(content['data']['articles']['edges'][1]['node']['publications']['edges']), 5)
+        self.assertEqual(content['data']['articles']['edges'][1]['node']['publications']['totalCount'], 5)
+
+    def test_article_reporter_query(self):
+        id = to_global_id('ArticleNode', self.article2.id)
+
+        response = self.query(
+          ARTICLE_QUERY,
+          op_name='article',
+          variables={
+              'id': id,
+          }
+        )
+        self.assertResponseNoErrors(response)
+        content = json.loads(response.content)
+
+        self.assertEqual(content['data']['article']['publications']['totalCount'], 5)
+        self.assertEqual(content['data']['article']['reporter']['id'], to_global_id('ReporterNode', self.reporter2.id))
+        self.assertEqual(content['data']['article']['reporter']['firstName'], self.reporter2.first_name)
+        self.assertEqual(content['data']['article']['reporter']['lastName'], self.reporter2.last_name)
+        self.assertEqual(content['data']['article']['reporter']['email'], self.reporter2.email)
 
     def test_update_article_mutation(self):
 

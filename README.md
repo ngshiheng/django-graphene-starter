@@ -11,7 +11,7 @@
 ![Test](https://github.com/ngshiheng/django-graphene-starter/workflows/test/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngshiheng/django-graphene-starter/blob/master/LICENSE)
 
-A GraphQL, Django server boilerplate built with Graphene
+A GraphQL, Django server boilerplate built with Graphene.
 
 # Tech Stacks
 
@@ -22,23 +22,42 @@ A GraphQL, Django server boilerplate built with Graphene
 
 # Getting Started
 
+This project is developed using [Insomnia REST Client](https://insomnia.rest/) which is an alternative to Postman.
+
+To ease development work, you may import all the available GraphQL mutations and queries [here](https://gist.github.com/ngshiheng/ad28bbf3147427111fe28d69e3e62fef) to your Insomnia workspace directly.
+
 ## Installing dependencies
 
 ```sh
 pipenv install --dev
 ```
 
-## Run locally
+## How to Use
+
+### Running the server locally
 
 ```sh
+pipenv run python django_graphene_starter/manage.py migrate
 pipenv run python3 django_graphene_starter/manage.py runserver
 ```
 
-## Run pytest
+### Running pytest
 
 ```sh
 pipenv run pytest django_graphene_starter
 ```
+
+### Generating fixtures
+
+```sh
+# To generate fixtures
+python django_graphene_starter/manage.py generate_fixtures
+
+# To delete all data
+python django_graphene_starter/manage.py flush
+```
+
+## GraphQL Queries and Mutations
 
 # Contributing
 
