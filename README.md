@@ -11,7 +11,7 @@
 ![Test](https://github.com/ngshiheng/django-graphene-starter/workflows/test/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngshiheng/django-graphene-starter/blob/master/LICENSE)
 
-A GraphQL, Django server boilerplate built with Graphene.
+A GraphQL, Django server boilerplate built with Graphene
 
 # Tech Stacks
 
@@ -21,10 +21,6 @@ A GraphQL, Django server boilerplate built with Graphene.
 - [graphene](https://docs.graphene-python.org/projects/django/en/latest/)
 
 # Getting Started
-
-This project is developed using [Insomnia REST Client](https://insomnia.rest/) which is an alternative to Postman.
-
-To ease development work, the latest GraphQL mutations and queries can be found [here](https://gist.github.com/ngshiheng/ad28bbf3147427111fe28d69e3e62fef). Just import this configuration file to your Insomnia workspace and start making API calls!
 
 ## Installing dependencies
 
@@ -61,6 +57,19 @@ python django_graphene_starter/manage.py generate_fixtures
 # To delete all data
 python django_graphene_starter/manage.py flush
 ```
+
+### Running available queries and mutations:
+
+[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Django%20Graphene%20Starter&uri=https%3A%2F%2Fgist.githubusercontent.com%2Fngshiheng%2Fad28bbf3147427111fe28d69e3e62fef%2Fraw%2F73d17639922902f5107b65df8438a448b269fc69%2Finsomnia_data.json)
+
+# To Do List
+
+- [ ] Write tests to check dataloader queries against non-dataloader queries, make sure the results are always the same
+- [ ] Many Articles -> One Reporter dataloader query doesn't seem to benefit much from dataloader, take a closer look into it
+- [ ] Add authentication
+- [ ] Support caching with Redis
+- [ ] Host this as a demo
+- [ ] Many Articles -> Many Publications dataloader query
 
 # Contributing
 

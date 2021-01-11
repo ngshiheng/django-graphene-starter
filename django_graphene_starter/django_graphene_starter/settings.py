@@ -110,6 +110,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 GRAPHENE = {
-    'RELAY_CONNECTION_MAX_LIMIT': 1000,
+    'RELAY_CONNECTION_MAX_LIMIT': 5000,
     'SCHEMA': 'django_graphene_starter.schema.schema',
+    'SCHEMA_OUTPUT': 'django_graphene_stater/django_graphene_stater/schema.graphql',
+    'MIDDLEWARE': [
+        'graphene_django.debug.DjangoDebugMiddleware',
+        'django_graphene_starter.middlewares.LoaderMiddleware',
+    ],
+
 }
