@@ -25,4 +25,4 @@ class Command(BaseCommand):
                 reporter=mixer.blend(Reporter),
             )
 
-        self.stdout.write(self.style.SUCCESS(f'Successfully generated fixtures: {reporters_count} Reporters | {articles_count} Articles | {publications_count} Publications.'))
+        self.stdout.write(self.style.SUCCESS(f'Successfully generated fixtures: {reporters_count} Reporters | {reporters_count * articles_count} Articles | {reporters_count * publications_count} Publications.'))

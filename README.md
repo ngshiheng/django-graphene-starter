@@ -11,7 +11,7 @@
 ![Test](https://github.com/ngshiheng/django-graphene-starter/workflows/test/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngshiheng/django-graphene-starter/blob/master/LICENSE)
 
-A GraphQL, Django server boilerplate built with Graphene.
+A GraphQL, Django server boilerplate built with Graphene
 
 # Tech Stacks
 
@@ -61,6 +61,15 @@ python django_graphene_starter/manage.py generate_fixtures
 # To delete all data
 python django_graphene_starter/manage.py flush
 ```
+
+# To Do List
+
+- [ ] Write tests to check dataloader queries against non-dataloader queries, make sure the results are always the same
+- [ ] Many Articles -> One Reporter dataloader query doesn't seem to benefit much from dataloader, take a closer look into it
+- [ ] Add authentication
+- [ ] Support caching with Redis
+- [ ] Host this as a demo
+- [ ] Many Articles -> Many Publications dataloader query
 
 # Contributing
 
