@@ -7,10 +7,10 @@ from .models import Article, Publication, Reporter
 
 
 class CountableConnectionBase(Connection):
+    total_count = Int(description='A total count of node in the collection.')
+
     class Meta:
         abstract = True
-
-    total_count = Int(description='A total count of node in the collection.')
 
     @staticmethod
     def resolve_total_count(root, *args, **kwargs):
@@ -35,12 +35,17 @@ class ReporterNode(DjangoObjectType):
 
 
 class PublicationNode(DjangoObjectType):
+    dataloader_articles = DjangoConnectionField('starter.types.ArticleNode', description='Return Article connection which contains pagination and Article information using dataloader.')
 
     class Meta:
         model = Publication
         interfaces = (Node,)
         filterset_class = PublicationFilter
         connection_class = CountableConnectionBase
+
+    @staticmethod
+    def resolve_dataloader_articles(root: Publication, info, **kwargs):
+        return info.context.loaders.articles_by_publication_loader.load(root.id)
 
 
 class ArticleNode(DjangoObjectType):

@@ -5,6 +5,21 @@ from promise import Promise
 from promise.dataloader import DataLoader
 
 
+def generate_loader_by_many_to_many_key(Type: SubclassWithMeta_Meta, attr: str):
+    class Loader(DataLoader):
+        def batch_load_fn(self, keys: list) -> Promise:
+            results_by_ids = defaultdict(list)
+            lookup = {f'{attr}__id__in': keys}
+
+            for result in Type._meta.model.objects.filter(**lookup).iterator():
+                for related in getattr(result, attr).iterator():
+                    results_by_ids[related.id].append(result)
+
+            return Promise.resolve([results_by_ids.get(id, []) for id in keys])
+
+    return Loader
+
+
 def generate_loader_by_foreign_key(Type: SubclassWithMeta_Meta, attr: str):
     class Loader(DataLoader):
         def batch_load_fn(self, keys: list) -> Promise:
