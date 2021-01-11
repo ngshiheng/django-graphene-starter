@@ -9,7 +9,7 @@ from ..models import Article, Publication, Reporter
 
 ARTICLES_QUERY = '''
 query articles {
-  articles {
+  articles(orderBy: "-pubDate") {
     totalCount
     edges {
       node {
