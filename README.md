@@ -65,11 +65,11 @@ python django_graphene_starter/manage.py flush
 # To Do List
 
 - [ ] Write tests to check dataloader queries against non-dataloader queries, make sure the results are always the same
-- [ ] Many Articles -> One Reporter dataloader query doesn't seem to benefit much from dataloader, take a closer look into it
+- [X] Many Articles -> One Reporter dataloader query doesn't seem to benefit much from dataloader, take a closer look into it
 - [ ] Add authentication
 - [ ] Support caching with Redis
 - [ ] Host this as a demo
-- [ ] Many Articles -> Many Publications dataloader query
+- [ ] Fix Many Articles -> Many Publications dataloader query
 
 ### References
 
