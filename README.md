@@ -71,6 +71,23 @@ python django_graphene_starter/manage.py flush
 - [ ] Host this as a demo
 - [ ] Many Articles -> Many Publications dataloader query
 
+### References
+
+- https://github.com/mirumee/saleor/blob/master/saleor/product/models.py#L452
+- https://github.com/mirumee/saleor/blob/master/saleor/graphql/product/dataloaders/products.py#L41
+
+**Case:**
+One Product : Many ProductVariant
+One Reporter: Many Article
+
+**Equivalents:**
+Product = Reporter
+ProductVariant = articles
+
+product_by_variant
+reporter_by_article_loader
+
+
 # Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change

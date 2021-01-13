@@ -3,6 +3,7 @@ from collections import defaultdict
 from graphene.utils.subclass_with_meta import SubclassWithMeta_Meta
 from promise import Promise
 from promise.dataloader import DataLoader
+from .models import Article, Reporter
 
 
 def generate_loader_by_many_to_many_key(Type: SubclassWithMeta_Meta, attr: str):
@@ -58,6 +59,8 @@ def generate_loader_by_foreign_key(Type: SubclassWithMeta_Meta, attr: str):
 
 def generate_loader(Type: SubclassWithMeta_Meta, attr: str):
     class Loader(DataLoader):
+        context_key = "product_by_id"
+
         def batch_load_fn(self, keys: list) -> Promise:
             """
             Example case of query One Article to One Reporter:
@@ -75,11 +78,46 @@ def generate_loader(Type: SubclassWithMeta_Meta, attr: str):
                 1880: <Reporter: Debbie Kirk>
             }
             """
+
             lookup = {f'{attr}__in': keys}
 
-            # Article.objects.filter(id__in=[1,2,3...])
-            results = {result.id: result.reporter for result in Type._meta.model.objects.filter(**lookup).iterator()}  # TODO: Remove hardcoded `result.reporter`
+            # Same effect as line 86 (WOW)
+            # x = Type._meta.model.objects.all().in_bulk(keys)
+            # print(x)
 
-            return Promise.resolve([results.get(id) for id in keys])
+            # Reporter.objects.filter(id__in[1,2,3,...])
+            results = {result.id: result for result in Type._meta.model.objects.filter(**lookup).iterator()}  # TODO: Remove hardcoded `result.reporter`
 
+            def with_articles(articles):
+                reporter_ids = [variant.reporter_id for variant in articles]
+                return Loader().load_many(reporter_ids)
+
+            Promise.resolve([results.get(id) for id in keys]).then(with_articles)
+
+    return Loader
+
+
+def generate_loader(Type: SubclassWithMeta_Meta, attr: str):
+    class ReporterByIdLoader(DataLoader):
+
+        def batch_load_fn(self, keys):
+            reporters = Reporter.objects.all().in_bulk(keys)
+            return Promise.resolve([reporters.get(product_id) for product_id in keys])
+
+    class ArticleByIdLoader(DataLoader):
+
+        def batch_load_fn(self, keys):
+            article = Article.objects.in_bulk(keys)
+            return Promise.resolve([article.get(key) for key in keys])
+
+    class Loader(DataLoader):
+
+        def batch_load_fn(self, keys):
+            def with_articles(articles):
+                reporter_ids = [article.reporter_id for article in articles]
+                return ReporterByIdLoader().load_many(reporter_ids)
+
+            return (
+                ArticleByIdLoader().load_many(keys).then(with_articles)
+            )
     return Loader
