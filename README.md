@@ -65,11 +65,28 @@ python django_graphene_starter/manage.py flush
 # To Do List
 
 - [ ] Write tests to check dataloader queries against non-dataloader queries, make sure the results are always the same
-- [ ] Many Articles -> One Reporter dataloader query doesn't seem to benefit much from dataloader, take a closer look into it
+- [X] Many Articles -> One Reporter dataloader query doesn't seem to benefit much from dataloader, take a closer look into it
 - [ ] Add authentication
 - [ ] Support caching with Redis
 - [ ] Host this as a demo
-- [ ] Many Articles -> Many Publications dataloader query
+- [ ] Fix Many Articles -> Many Publications dataloader query
+
+### References
+
+- https://github.com/mirumee/saleor/blob/master/saleor/product/models.py#L452
+- https://github.com/mirumee/saleor/blob/master/saleor/graphql/product/dataloaders/products.py#L41
+
+**Case:**
+One Product : Many ProductVariant
+One Reporter: Many Article
+
+**Equivalents:**
+Product = Reporter
+ProductVariant = articles
+
+product_by_variant
+reporter_by_article_loader
+
 
 # Contributing
 

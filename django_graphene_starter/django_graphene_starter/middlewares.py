@@ -1,12 +1,13 @@
 import starter.loaders as loaders
-from starter.types import ArticleNode
+from starter.types import ArticleNode, ReporterNode
 
 
 class Loaders:
     def __init__(self):
-        self.reporter_by_article_loader = loaders.generate_loader(ArticleNode, "id")()
+        self.reporter_by_article_loader = loaders.generate_loader(ReporterNode, "id")()
         self.articles_by_reporter_loader = loaders.generate_loader_by_foreign_key(ArticleNode, 'reporter_id')()
-        self.articles_by_publication_loader = loaders.generate_loader_by_many_to_many_key(ArticleNode, 'publications')()
+
+        self.articles_by_publication_loader = loaders.generate_loader_by_many_to_many_key(ArticleNode, 'publications')()  # TODO: Need fixes. This is not working as expected
 
 
 class LoaderMiddleware:

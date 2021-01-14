@@ -28,6 +28,38 @@ query articles {
 }
 '''
 
+REPORTER_BY_ARTICLES_QUERY = '''
+query articles {
+  articles(first: 1000) {
+    totalCount
+    edges {
+      node {
+        id
+        reporter {
+          id
+        }
+      }
+    }
+  }
+}
+'''
+
+REPORTER_BY_ARTICLES_QUERY_WITH_DATALOADER = '''
+query articles {
+  articles(first: 1000) {
+    totalCount
+    edges {
+      node {
+        id
+        dataloaderReporter {
+          id
+        }
+      }
+    }
+  }
+}
+'''
+
 ARTICLE_QUERY = '''
 query article($id: ID!) {
   article(id: $id) {
@@ -102,6 +134,14 @@ class ArticleTestCase(GraphQLTestCase):
           reporter=self.reporter2,
         )
 
+        self.articles = [
+          mixer.cycle(5).blend(
+              Article,
+              headline=mixer.faker.catch_phrase,
+              reporter=mixer.blend(Reporter),
+          ) for _ in range(20)
+        ]
+
     def test_articles_query(self):
         response = self.query(
           ARTICLES_QUERY,
@@ -110,10 +150,31 @@ class ArticleTestCase(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
 
-        self.assertEqual(len(content['data']['articles']['edges']), 2)
-        self.assertEqual(content['data']['articles']['totalCount'], 2)
+        self.assertEqual(len(content['data']['articles']['edges']), 102)
+        self.assertEqual(content['data']['articles']['totalCount'], 102)
         self.assertEqual(len(content['data']['articles']['edges'][1]['node']['publications']['edges']), 5)
         self.assertEqual(content['data']['articles']['edges'][1]['node']['publications']['totalCount'], 5)
+
+    def test_articles_by_reporters_dataloader_query(self):
+        response = self.query(
+          REPORTER_BY_ARTICLES_QUERY,
+          op_name='articles',
+        )
+
+        dataloader_response = self.query(
+          REPORTER_BY_ARTICLES_QUERY_WITH_DATALOADER,
+          op_name='articles',
+        )
+        self.assertResponseNoErrors(response)
+        self.assertResponseNoErrors(dataloader_response)
+
+        content = json.loads(response.content)
+        dataloader_content = json.loads(dataloader_response.content)
+
+        result = [edge['node']['reporter']['id'] for edge in content['data']['articles']['edges']]
+        dataloader_result = [edge['node']['dataloaderReporter']['id'] for edge in dataloader_content['data']['articles']['edges']]
+
+        self.assertEqual(result, dataloader_result)
 
     def test_article_reporter_query(self):
         id = to_global_id('ArticleNode', self.article2.id)
