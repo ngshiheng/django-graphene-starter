@@ -112,10 +112,15 @@ STATIC_URL = '/static/'
 GRAPHENE = {
     'RELAY_CONNECTION_MAX_LIMIT': 5000,
     'SCHEMA': 'django_graphene_starter.schema.schema',
-    'SCHEMA_OUTPUT': 'django_graphene_stater/django_graphene_stater/schema.graphql',
+    'SCHEMA_OUTPUT': 'schema.graphql',
     'MIDDLEWARE': [
         'graphene_django.debug.DjangoDebugMiddleware',
         'django_graphene_starter.middlewares.LoaderMiddleware',
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
-
 }
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

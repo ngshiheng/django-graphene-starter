@@ -1,4 +1,3 @@
-
 from django_filters import FilterSet, OrderingFilter
 
 from .models import Article, Publication, Reporter

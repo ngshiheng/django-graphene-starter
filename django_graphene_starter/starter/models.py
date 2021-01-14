@@ -1,13 +1,15 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
-class Reporter(models.Model):
-    first_name = models.CharField(max_length=256)
-    last_name = models.CharField(max_length=256)
-    email = models.EmailField(unique=True)
+class Reporter(User):
+
+    class Meta:
+        proxy = True
+        ordering = ['first_name']
 
     def __str__(self):
-        return "%s %s" % (self.first_name, self.last_name)
+        return f'{self.first_name}, {self.last_name}'
 
 
 class Publication(models.Model):
@@ -26,8 +28,8 @@ class Article(models.Model):
     reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE, related_name='articles')
     publications = models.ManyToManyField(Publication, related_name='articles')
 
-    def __str__(self):
-        return self.headline
-
     class Meta:
         ordering = ['headline']
+
+    def __str__(self):
+        return self.headline

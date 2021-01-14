@@ -14,22 +14,30 @@ class CreateReporter(ClientIDMutation):
     class Input:
         first_name = String(required=True)
         last_name = String(required=True)
+        username = String(required=True)
         email = String(required=True)
+        password = String(required=True)
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
 
         first_name = input['first_name']
         last_name = input['last_name']
+        username = input['username']
         email = input['email']
+        password = input['password']
 
         reporter, created = Reporter.objects.get_or_create(
             email=email,
+            username=username,
             defaults={
                 'first_name': first_name,
                 'last_name': last_name,
             }
         )
+
+        reporter.set_password(password)
+        reporter.save()
 
         if not created:
             raise GraphQLError('Reporter already exist!')

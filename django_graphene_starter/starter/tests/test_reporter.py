@@ -157,6 +157,8 @@ class ReporterTestCase(GraphQLTestCase):
               'firstName': first_name,
               'lastName': last_name,
               'email': email,
+              'username': first_name,
+              'password': 'AUg5hAXtQ5ADqZsp',
             }
           }
         )
