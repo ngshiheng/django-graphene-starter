@@ -5,15 +5,44 @@ from graphene_django.utils.testing import GraphQLTestCase
 from graphql_relay import to_global_id
 from mixer.backend.django import mixer
 
-from ..models import Reporter
+from ..models import Article, Reporter
 
-REPORTERS_QUERY = '''
+ARTICLES_BY_REPORTERS_QUERY = '''
 query reporters {
-  reporters {
+  reporters(first: 1000) {
     totalCount
     edges {
       node {
         id
+        articles {
+          totalCount
+          edges {
+            node {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+'''
+
+ARTICLES_BY_REPORTERS_QUERY_WITH_DATALOADER = '''
+query reporters {
+  reporters(first: 1000) {
+    totalCount
+    edges {
+      node {
+        id
+        dataloaderArticles {
+          totalCount
+          edges {
+            node {
+              id
+            }
+          }
+        }
       }
     }
   }
@@ -69,21 +98,50 @@ class ReporterTestCase(GraphQLTestCase):
     GRAPHQL_URL = '/graphql'
 
     def setUp(self):
+
+        self.articles = [
+          mixer.cycle(5).blend(
+              Article,
+              headline=mixer.faker.catch_phrase,
+              reporter=mixer.blend(Reporter),
+          ) for _ in range(50)
+        ]
+
         self.reporter1 = mixer.blend(Reporter)
         self.reporter2 = mixer.blend(Reporter)
-        mixer.cycle(5).blend(Reporter)
 
     def test_reporters_query(self):
 
         response = self.query(
-          REPORTERS_QUERY,
+          ARTICLES_BY_REPORTERS_QUERY,
           op_name='reporters',
         )
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
 
-        self.assertEqual(len(content['data']['reporters']['edges']), 7)
-        self.assertEqual(content['data']['reporters']['totalCount'], 7)
+        self.assertEqual(len(content['data']['reporters']['edges']), 52)
+        self.assertEqual(content['data']['reporters']['totalCount'], 52)
+
+    def test_articles_by_reporters_dataloader_query(self):
+        response = self.query(
+          ARTICLES_BY_REPORTERS_QUERY,
+          op_name='reporters',
+        )
+
+        dataloader_response = self.query(
+          ARTICLES_BY_REPORTERS_QUERY_WITH_DATALOADER,
+          op_name='reporters',
+        )
+        self.assertResponseNoErrors(response)
+        self.assertResponseNoErrors(dataloader_response)
+
+        content = json.loads(response.content)
+        dataloader_content = json.loads(dataloader_response.content)
+
+        result = [[article_edge for article_edge in edge['node']['articles']['edges']] for edge in content['data']['reporters']['edges']]
+        dataloader_result = [[article_edge for article_edge in edge['node']['dataloaderArticles']['edges']] for edge in dataloader_content['data']['reporters']['edges']]
+
+        self.assertEqual(result, dataloader_result)
 
     def test_create_reporter_mutation(self):
 
