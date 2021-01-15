@@ -34,7 +34,7 @@ class ReporterNode(DjangoObjectType):
 
     @staticmethod
     def resolve_articles(root: Reporter, info, **kwargs):
-        return Article.objects.all()
+        return Article.objects.filter(reporter=root)
 
     @staticmethod
     def resolve_dataloader_articles(root: Reporter, info, **kwargs):
