@@ -155,7 +155,7 @@ class ArticleTestCase(GraphQLTestCase):
         self.assertEqual(len(content['data']['articles']['edges'][1]['node']['publications']['edges']), 5)
         self.assertEqual(content['data']['articles']['edges'][1]['node']['publications']['totalCount'], 5)
 
-    def test_articles_by_reporters_dataloader_query(self):
+    def test_reporter_by_articles_dataloader_query(self):
         response = self.query(
           REPORTER_BY_ARTICLES_QUERY,
           op_name='articles',
