@@ -1,5 +1,6 @@
 from graphene import ID, ClientIDMutation, Field, String
 from graphql import GraphQLError
+from graphql_jwt.decorators import login_required
 from graphql_relay import from_global_id
 
 from .models import Article, Publication, Reporter
@@ -153,17 +154,14 @@ class CreateArticle(ClientIDMutation):
     article = Field(ArticleNode)
 
     class Input:
-        reporter_id = ID(required=True)
         headline = String(required=True)
 
     @classmethod
+    @login_required
     def mutate_and_get_payload(cls, root, info, **input):
-
         headline = input['headline']
 
-        _, reporter_id = from_global_id(input['reporter_id'])
-
-        reporter = Reporter.objects.get(id=reporter_id)
+        reporter = Reporter.objects.get(username=info.context.user.username)  # TODO: Find a better way to reference to Proxy user model
 
         article = Article.objects.create(headline=headline, reporter=reporter)
 

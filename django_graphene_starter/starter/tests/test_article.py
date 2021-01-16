@@ -7,6 +7,16 @@ from mixer.backend.django import mixer
 
 from ..models import Article, Publication, Reporter
 
+TOKEN_AUTH_MUTATION = '''
+mutation tokenAuth($username: String!, $password: String!) {
+  tokenAuth(username: $username, password: $password) {
+    token
+    payload
+    refreshExpiresIn
+  }
+}
+'''
+
 ARTICLES_QUERY = '''
 query articles {
   articles(orderBy: "-pubDate") {
@@ -84,10 +94,15 @@ mutation createArticle($input: CreateArticleInput!) {
     article {
       id
       headline
+      pubDate
+      reporter {
+        id
+        email
+        username
+      }
     }
   }
 }
-
 '''
 
 UPDATE_ARTICLE_MUTATION = '''
@@ -142,6 +157,26 @@ class ArticleTestCase(GraphQLTestCase):
           ) for _ in range(20)
         ]
 
+        # JWT Authentication
+        self.username = 'testusername'
+        self.password = 'testpassword'
+
+        self.reporter = Reporter.objects.create(username=self.username, email='test_reporter@test.com')
+        self.reporter.set_password(self.password)
+        self.reporter.save()
+
+        response = self.query(
+          TOKEN_AUTH_MUTATION,
+          op_name='tokenAuth',
+          variables={
+              'username': self.username,
+              'password': self.password,
+            },
+        )
+
+        content = json.loads(response.content)
+        self.access_token = content['data']['tokenAuth']['token']
+
     def test_articles_query(self):
         response = self.query(
           ARTICLES_QUERY,
@@ -194,6 +229,31 @@ class ArticleTestCase(GraphQLTestCase):
         self.assertEqual(content['data']['article']['reporter']['firstName'], self.reporter2.first_name)
         self.assertEqual(content['data']['article']['reporter']['lastName'], self.reporter2.last_name)
         self.assertEqual(content['data']['article']['reporter']['email'], self.reporter2.email)
+
+    def test_create_article_mutation_returns_error_if_not_logged_in(self):
+
+        response = self.query(
+          CREATE_ARTICLE_MUTATION,
+          op_name='createArticle',
+          variables={'input': {'headline': mixer.faker.catch_phrase()}},
+        )
+
+        self.assertResponseHasErrors(response)
+
+    def test_create_article_mutation_requires_login(self):
+
+        response = self.query(
+          CREATE_ARTICLE_MUTATION,
+          op_name='createArticle',
+          variables={'input': {'headline': mixer.faker.catch_phrase()}},
+          headers={'HTTP_AUTHORIZATION': f'JWT {self.access_token}'}  # NOTE: https://github.com/graphql-python/graphene-django/pull/827
+        )
+
+        self.assertResponseNoErrors(response)
+        content = json.loads(response.content)
+
+        self.assertEqual(content['data']['createArticle']['article']['reporter']['username'], self.reporter.username)
+        self.assertEqual(content['data']['createArticle']['article']['reporter']['email'], self.reporter.email)
 
     def test_update_article_mutation(self):
 
