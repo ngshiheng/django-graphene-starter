@@ -139,22 +139,22 @@ class ArticleTestCase(GraphQLTestCase):
         self.reporter2 = mixer.blend(Reporter)
 
         self.article1 = mixer.blend(
-          Article,
-          publications=[mixer.blend(Publication)],
-          reporter=self.reporter1,
+            Article,
+            publications=[mixer.blend(Publication)],
+            reporter=self.reporter1,
         )
         self.article2 = mixer.blend(
-          Article,
-          publications=(mixer.cycle(5).blend(Publication)),
-          reporter=self.reporter2,
+            Article,
+            publications=(mixer.cycle(5).blend(Publication)),
+            reporter=self.reporter2,
         )
 
         self.articles = [
-          mixer.cycle(5).blend(
-              Article,
-              headline=mixer.faker.catch_phrase,
-              reporter=mixer.blend(Reporter),
-          ) for _ in range(20)
+            mixer.cycle(5).blend(
+                Article,
+                headline=mixer.faker.catch_phrase,
+                reporter=mixer.blend(Reporter),
+            ) for _ in range(20)
         ]
 
         # JWT Authentication
@@ -166,11 +166,11 @@ class ArticleTestCase(GraphQLTestCase):
         self.reporter.save()
 
         response = self.query(
-          TOKEN_AUTH_MUTATION,
-          op_name='tokenAuth',
-          variables={
-              'username': self.username,
-              'password': self.password,
+            TOKEN_AUTH_MUTATION,
+            op_name='tokenAuth',
+            variables={
+                'username': self.username,
+                'password': self.password,
             },
         )
 
@@ -179,8 +179,8 @@ class ArticleTestCase(GraphQLTestCase):
 
     def test_articles_query(self):
         response = self.query(
-          ARTICLES_QUERY,
-          op_name='articles',
+            ARTICLES_QUERY,
+            op_name='articles',
         )
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
@@ -192,13 +192,13 @@ class ArticleTestCase(GraphQLTestCase):
 
     def test_reporter_by_articles_dataloader_query(self):
         response = self.query(
-          REPORTER_BY_ARTICLES_QUERY,
-          op_name='articles',
+            REPORTER_BY_ARTICLES_QUERY,
+            op_name='articles',
         )
 
         dataloader_response = self.query(
-          REPORTER_BY_ARTICLES_QUERY_WITH_DATALOADER,
-          op_name='articles',
+            REPORTER_BY_ARTICLES_QUERY_WITH_DATALOADER,
+            op_name='articles',
         )
         self.assertResponseNoErrors(response)
         self.assertResponseNoErrors(dataloader_response)
@@ -215,11 +215,11 @@ class ArticleTestCase(GraphQLTestCase):
         id = to_global_id('ArticleNode', self.article2.id)
 
         response = self.query(
-          ARTICLE_QUERY,
-          op_name='article',
-          variables={
-              'id': id,
-          }
+            ARTICLE_QUERY,
+            op_name='article',
+            variables={
+                'id': id,
+            }
         )
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
@@ -233,9 +233,9 @@ class ArticleTestCase(GraphQLTestCase):
     def test_create_article_mutation_returns_error_if_not_logged_in(self):
 
         response = self.query(
-          CREATE_ARTICLE_MUTATION,
-          op_name='createArticle',
-          variables={'input': {'headline': mixer.faker.catch_phrase()}},
+            CREATE_ARTICLE_MUTATION,
+            op_name='createArticle',
+            variables={'input': {'headline': mixer.faker.catch_phrase()}},
         )
 
         self.assertResponseHasErrors(response)
@@ -243,10 +243,10 @@ class ArticleTestCase(GraphQLTestCase):
     def test_create_article_mutation_requires_login(self):
 
         response = self.query(
-          CREATE_ARTICLE_MUTATION,
-          op_name='createArticle',
-          variables={'input': {'headline': mixer.faker.catch_phrase()}},
-          headers={'HTTP_AUTHORIZATION': f'JWT {self.access_token}'}  # NOTE: https://github.com/graphql-python/graphene-django/pull/827
+            CREATE_ARTICLE_MUTATION,
+            op_name='createArticle',
+            variables={'input': {'headline': mixer.faker.catch_phrase()}},
+            headers={'HTTP_AUTHORIZATION': f'JWT {self.access_token}'}  # NOTE: https://github.com/graphql-python/graphene-django/pull/827
         )
 
         self.assertResponseNoErrors(response)
@@ -260,14 +260,14 @@ class ArticleTestCase(GraphQLTestCase):
         id = to_global_id('ArticleNode', self.article1.id)
 
         response = self.query(
-          UPDATE_ARTICLE_MUTATION,
-          op_name='updateArticle',
-          variables={
-            'input': {
-              'id': id,
-              'headline': 'Function-based homogeneous synergy',
+            UPDATE_ARTICLE_MUTATION,
+            op_name='updateArticle',
+            variables={
+                'input': {
+                    'id': id,
+                    'headline': 'Function-based homogeneous synergy',
+                }
             }
-          }
         )
 
         self.assertResponseNoErrors(response)
@@ -280,13 +280,13 @@ class ArticleTestCase(GraphQLTestCase):
         number_of_articles = Article.objects.count()
 
         response = self.query(
-          DELETE_ARTICLE_MUTATION,
-          op_name='deleteArticle',
-          variables={
-            'input': {
-              'id': another_article_id,
+            DELETE_ARTICLE_MUTATION,
+            op_name='deleteArticle',
+            variables={
+                'input': {
+                    'id': another_article_id,
+                }
             }
-          }
         )
 
         self.assertResponseNoErrors(response)

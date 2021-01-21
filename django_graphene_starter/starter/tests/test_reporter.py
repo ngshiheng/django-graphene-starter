@@ -100,11 +100,11 @@ class ReporterTestCase(GraphQLTestCase):
     def setUp(self):
 
         self.articles = [
-          mixer.cycle(5).blend(
-              Article,
-              headline=mixer.faker.catch_phrase,
-              reporter=mixer.blend(Reporter),
-          ) for _ in range(50)
+            mixer.cycle(5).blend(
+                Article,
+                headline=mixer.faker.catch_phrase,
+                reporter=mixer.blend(Reporter),
+            ) for _ in range(50)
         ]
 
         self.reporter1 = mixer.blend(Reporter)
@@ -113,8 +113,8 @@ class ReporterTestCase(GraphQLTestCase):
     def test_reporters_query(self):
 
         response = self.query(
-          ARTICLES_BY_REPORTERS_QUERY,
-          op_name='reporters',
+            ARTICLES_BY_REPORTERS_QUERY,
+            op_name='reporters',
         )
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
@@ -124,13 +124,13 @@ class ReporterTestCase(GraphQLTestCase):
 
     def test_articles_by_reporters_dataloader_query(self):
         response = self.query(
-          ARTICLES_BY_REPORTERS_QUERY,
-          op_name='reporters',
+            ARTICLES_BY_REPORTERS_QUERY,
+            op_name='reporters',
         )
 
         dataloader_response = self.query(
-          ARTICLES_BY_REPORTERS_QUERY_WITH_DATALOADER,
-          op_name='reporters',
+            ARTICLES_BY_REPORTERS_QUERY_WITH_DATALOADER,
+            op_name='reporters',
         )
         self.assertResponseNoErrors(response)
         self.assertResponseNoErrors(dataloader_response)
@@ -150,17 +150,17 @@ class ReporterTestCase(GraphQLTestCase):
         email = mixer.faker.email()
 
         response = self.query(
-          CREATE_REPORTER_MUTATION,
-          op_name='createReporter',
-          variables={
-            'input': {
-              'firstName': first_name,
-              'lastName': last_name,
-              'email': email,
-              'username': first_name,
-              'password': 'AUg5hAXtQ5ADqZsp',
+            CREATE_REPORTER_MUTATION,
+            op_name='createReporter',
+            variables={
+                'input': {
+                    'firstName': first_name,
+                    'lastName': last_name,
+                    'email': email,
+                    'username': first_name,
+                    'password': 'AUg5hAXtQ5ADqZsp',
+                }
             }
-          }
         )
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
@@ -178,16 +178,16 @@ class ReporterTestCase(GraphQLTestCase):
         email = mixer.faker.email()
 
         response = self.query(
-          UPDATE_REPORTER_MUTATION,
-          op_name='updateReporter',
-          variables={
-            'input': {
-              'id': id,
-              'firstName': first_name,
-              'lastName': last_name,
-              'email': email,
+            UPDATE_REPORTER_MUTATION,
+            op_name='updateReporter',
+            variables={
+                'input': {
+                    'id': id,
+                    'firstName': first_name,
+                    'lastName': last_name,
+                    'email': email,
+                }
             }
-          }
         )
 
         self.assertResponseNoErrors(response)
@@ -202,13 +202,13 @@ class ReporterTestCase(GraphQLTestCase):
         number_of_reporters = Reporter.objects.count()
 
         response = self.query(
-          DELETE_REPORTER_MUTATION,
-          op_name='deleteReporter',
-          variables={
-            'input': {
-              'id': another_reporter_id,
+            DELETE_REPORTER_MUTATION,
+            op_name='deleteReporter',
+            variables={
+                'input': {
+                    'id': another_reporter_id,
+                }
             }
-          }
         )
 
         self.assertResponseNoErrors(response)
