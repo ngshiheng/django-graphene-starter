@@ -9,7 +9,7 @@ class Reporter(User):
         ordering = ['first_name']
 
     def __str__(self):
-        return f'{self.first_name}, {self.last_name}'
+        return self.username
 
 
 class Publication(models.Model):

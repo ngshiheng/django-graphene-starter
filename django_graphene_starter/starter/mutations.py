@@ -1,6 +1,7 @@
+from django.contrib.auth.models import Permission
 from graphene import ID, ClientIDMutation, Field, String
 from graphql import GraphQLError
-from graphql_jwt.decorators import login_required
+from graphql_jwt.decorators import login_required, permission_required
 from graphql_relay import from_global_id
 
 from .models import Article, Publication, Reporter
@@ -37,6 +38,9 @@ class CreateReporter(ClientIDMutation):
             }
         )
 
+        permission = Permission.objects.get(name='Can change reporter')
+        reporter.user_permissions.add(permission)
+
         reporter.set_password(password)
         reporter.save()
 
@@ -47,6 +51,9 @@ class CreateReporter(ClientIDMutation):
 
 
 class UpdateReporter(ClientIDMutation):
+    """
+    A reporter can only update his/her own details if he/she has `Can change reporter` permission
+    """
     reporter = Field(ReporterNode)
 
     class Input:
@@ -56,11 +63,14 @@ class UpdateReporter(ClientIDMutation):
         email = String()
 
     @classmethod
+    @permission_required('starter.change_reporter')
     def mutate_and_get_payload(cls, root, info, **input):
 
         _, id = from_global_id(input['id'])
 
         reporter = Reporter.objects.get(id=id)
+
+        assert info.context.user.is_staff or info.context.user == reporter, 'Permission denied. You can only update your own account.'
 
         for field, value in input.items():
             if field != 'id':
