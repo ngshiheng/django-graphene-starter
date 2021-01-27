@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Permission
 from graphene import ID, ClientIDMutation, Field, String
 from graphql import GraphQLError
-from graphql_jwt.decorators import login_required, permission_required
+from graphql_jwt.decorators import login_required, permission_required, staff_member_required
 from graphql_relay import from_global_id
 
 from .models import Article, Publication, Reporter
@@ -89,6 +89,7 @@ class DeleteReporter(ClientIDMutation):
         id = ID(required=True, description='ID of the Reporter to be deleted.')
 
     @classmethod
+    @staff_member_required
     def mutate_and_get_payload(cls, root, info, **input):
 
         _, id = from_global_id(input['id'])

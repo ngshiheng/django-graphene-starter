@@ -141,6 +141,26 @@ class ReporterTestCase(GraphQLTestCase):
         content = json.loads(response.content)
         self.access_token = content['data']['tokenAuth']['token']
 
+        # Create staff user
+        self.staff_username = 'teststaffusername'
+        self.staff_password = 'teststaffpassword'
+
+        self.staff_reporter = Reporter.objects.create(username=self.staff_username, email='test_staff_reporter@test.com', is_staff=True)
+        self.staff_reporter.set_password(self.staff_password)
+        self.staff_reporter.save()
+
+        staff_response = self.query(
+            TOKEN_AUTH_MUTATION,
+            op_name='tokenAuth',
+            variables={
+                'username': self.staff_username,
+                'password': self.staff_password,
+            },
+        )
+
+        staff_content = json.loads(staff_response.content)
+        self.staff_access_token = staff_content['data']['tokenAuth']['token']
+
     def test_reporters_query(self):
 
         response = self.query(
@@ -150,8 +170,8 @@ class ReporterTestCase(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
 
-        self.assertEqual(len(content['data']['reporters']['edges']), 53)
-        self.assertEqual(content['data']['reporters']['totalCount'], 53)
+        self.assertEqual(len(content['data']['reporters']['edges']), 54)
+        self.assertEqual(content['data']['reporters']['totalCount'], 54)
 
     def test_articles_by_reporters_dataloader_query(self):
         response = self.query(
@@ -288,6 +308,24 @@ class ReporterTestCase(GraphQLTestCase):
         self.assertEqual(content['data']['updateReporter']['reporter']['lastName'], last_name)
         self.assertEqual(content['data']['updateReporter']['reporter']['email'], email)
 
+    def test_delete_reporter_mutation_requires_staff_member(self):
+        another_reporter_id = to_global_id('ReporterNode', self.reporter2.id)
+
+        response = self.query(
+            DELETE_REPORTER_MUTATION,
+            op_name='deleteReporter',
+            variables={
+                'input': {
+                    'id': another_reporter_id,
+                }
+            }
+        )
+
+        self.assertResponseHasErrors(response)
+        content = json.loads(response.content)
+
+        self.assertEqual(content['errors'][0]['message'], 'You do not have permission to perform this action')
+
     def test_delete_reporter_mutation(self):
         another_reporter_id = to_global_id('ReporterNode', self.reporter2.id)
         number_of_reporters = Reporter.objects.count()
@@ -299,7 +337,8 @@ class ReporterTestCase(GraphQLTestCase):
                 'input': {
                     'id': another_reporter_id,
                 }
-            }
+            },
+            headers={'HTTP_AUTHORIZATION': f'JWT {self.staff_access_token}'}
         )
 
         self.assertResponseNoErrors(response)
