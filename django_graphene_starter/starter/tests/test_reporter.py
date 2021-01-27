@@ -121,7 +121,7 @@ class ReporterTestCase(GraphQLTestCase):
         self.reporter1 = mixer.blend(Reporter)
         self.reporter2 = mixer.blend(Reporter)
 
-        # JWT Authentication
+        # Create user
         self.username = 'testusername'
         self.password = 'testpassword'
 
