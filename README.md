@@ -28,11 +28,12 @@ A GraphQL, Django server boilerplate built with Graphene.
 -   [x] Authentication and permission control
 -   [ ] Rate limiting
 -   [ ] Caching
+-   [ ] Hosting
 -   [ ] Many Articles -> Many Publications dataloader query (and reverse)
 
 # Getting Started
 
-## Installing dependencies
+## Installing Dependencies
 
 ```sh
 pipenv install --dev
@@ -40,7 +41,7 @@ pipenv install --dev
 
 ## How to Use
 
-## Running the server locally
+### Local Development
 
 ```sh
 # Database migration
@@ -50,11 +51,13 @@ pipenv run python django_graphene_starter/manage.py migrate
 pipenv run python3 django_graphene_starter/manage.py runserver
 ```
 
-## Check out all the queries and mutations
+### Queries and Mutation
 
 [![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Django%20Graphene%20Starter&uri=https%3A%2F%2Fgist.githubusercontent.com%2Fngshiheng%2Fad28bbf3147427111fe28d69e3e62fef%2Fraw%2F73d17639922902f5107b65df8438a448b269fc69%2Finsomnia_data.json)
 
-## Generating fixtures
+Read more about using Insomnia for API development [here](https://medium.com/swlh/fast-track-your-api-development-with-insomnia-rest-client-d02521c31b9d).
+
+### Generating Fixtures
 
 [mixer](https://github.com/klen/mixer) is used to generate fixtures for this project.
 
@@ -76,17 +79,6 @@ pipenv run pytest django_graphene_starter
 
 -   https://github.com/mirumee/saleor/blob/master/saleor/product/models.py#L452
 -   https://github.com/mirumee/saleor/blob/master/saleor/graphql/product/dataloaders/products.py#L41
-
-**Case:**
-One Product : Many ProductVariant
-One Reporter: Many Article
-
-**Equivalents:**
-Product = Reporter
-ProductVariant = articles
-
-product_by_variant
-reporter_by_article_loader
 
 # Contributing
 
