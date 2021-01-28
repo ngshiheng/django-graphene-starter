@@ -3,28 +3,39 @@ name: test
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  test-job:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.9]
+    test-job:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: [3.9]
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                  python-version: ${{ matrix.python-version }}
 
-      - uses: dschep/install-pipenv-action@v1
-      - name: Install pipenv
-        run: |
-          pip install pipenv
-      - name: Install dependencies
-        run: |
-          pipenv install --dev
+            - uses: dschep/install-pipenv-action@v1
+            - name: Install pipenv
+              run: |
+                  pip install pipenv
+            - name: Install dependencies
+              run: |
+                  pipenv install --dev
 
-      - name: Run checks
-        run: |
-          pipenv run flake8 --max-line-length=255 --statistics --show-source
-          pipenv run pytest django_graphene_starter
+            - name: Run checks
+              run: |
+                  pipenv run flake8 --max-line-length=255 --statistics --show-source
+                  pipenv run pytest django_graphene_starter
+
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v1
+              with:
+                  files: ./coverage.xml
+                  directory: .
+                  flags: unittests
+                  name: codecov-umbrella
+                  fail_ci_if_error: true
+                  path_to_write_report: ./coverage/codecov_report.txt
+                  verbose: true
