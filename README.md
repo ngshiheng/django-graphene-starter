@@ -8,27 +8,27 @@
 
 <br />
 
-![Test](https://github.com/ngshiheng/django-graphene-starter/workflows/test/badge.svg)
+![CI/CD](https://github.com/ngshiheng/django-graphene-starter/workflows/test/badge.svg)
+[![codecov](https://codecov.io/gh/ngshiheng/django-graphene-starter/branch/master/graph/badge.svg?token=TSC5ZDZ0ZY)](https://codecov.io/gh/ngshiheng/django-graphene-starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngshiheng/django-graphene-starter/blob/master/LICENSE)
 
 A GraphQL, Django server boilerplate built with Graphene.
 
 # Tech Stacks
 
-- [graphql](https://graphql.org/)
-- [python](https://www.python.org/)
-- [django](https://www.djangoproject.com/)
-- [graphene](https://docs.graphene-python.org/projects/django/en/latest/)
+-   [graphql](https://graphql.org/)
+-   [python](https://www.python.org/)
+-   [django](https://www.djangoproject.com/)
+-   [graphene](https://docs.graphene-python.org/projects/django/en/latest/)
 
 ## Features
 
-- [x] Tests to check dataloader queries against non-dataloader queries, make sure the results are always the same
-- [x] Reporters -> Articles dataloader query
-- [x] Articles -> Reporter dataloader query
-- [ ] Many Articles -> Many Publications dataloader query (and reverse)
-- [ ] Authentication
-- [ ] Caching with Redis
-- [ ] Hosted on serverless platform
+-   [x] Reporters -> Articles dataloader query
+-   [x] Articles -> Reporter dataloader query
+-   [x] Authentication and permission control
+-   [ ] Rate limiting
+-   [ ] Caching
+-   [ ] Many Articles -> Many Publications dataloader query (and reverse)
 
 # Getting Started
 
@@ -74,8 +74,8 @@ pipenv run pytest django_graphene_starter
 
 # References
 
-- https://github.com/mirumee/saleor/blob/master/saleor/product/models.py#L452
-- https://github.com/mirumee/saleor/blob/master/saleor/graphql/product/dataloaders/products.py#L41
+-   https://github.com/mirumee/saleor/blob/master/saleor/product/models.py#L452
+-   https://github.com/mirumee/saleor/blob/master/saleor/graphql/product/dataloaders/products.py#L41
 
 **Case:**
 One Product : Many ProductVariant
