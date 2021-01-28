@@ -69,8 +69,8 @@ class PublicationTestCase(GraphQLTestCase):
 
     def test_publications_query(self):
         response = self.query(
-          PUBLICATIONS_QUERY,
-          op_name='publications',
+            PUBLICATIONS_QUERY,
+            op_name='publications',
         )
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
@@ -83,13 +83,13 @@ class PublicationTestCase(GraphQLTestCase):
         title = mixer.faker.catch_phrase()
 
         response = self.query(
-          CREATE_PUBLICATION_MUTATION,
-          op_name='createPublication',
-          variables={
-            'input': {
-              'title': title,
+            CREATE_PUBLICATION_MUTATION,
+            op_name='createPublication',
+            variables={
+                'input': {
+                    'title': title,
+                }
             }
-          }
         )
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
@@ -102,14 +102,14 @@ class PublicationTestCase(GraphQLTestCase):
         id = to_global_id('PublicationNode', self.publication1.id)
 
         response = self.query(
-          UPDATE_PUBLICATION_MUTATION,
-          op_name='updatePublication',
-          variables={
-            'input': {
-              'id': id,
-              'title': 'Function-based homogeneous synergy',
+            UPDATE_PUBLICATION_MUTATION,
+            op_name='updatePublication',
+            variables={
+                'input': {
+                    'id': id,
+                    'title': 'Function-based homogeneous synergy',
+                }
             }
-          }
         )
 
         self.assertResponseNoErrors(response)
@@ -122,13 +122,13 @@ class PublicationTestCase(GraphQLTestCase):
         number_of_publications = Publication.objects.count()
 
         response = self.query(
-          DELETE_PUBLICATION_MUTATION,
-          op_name='deletePublication',
-          variables={
-            'input': {
-              'id': another_publication_id,
+            DELETE_PUBLICATION_MUTATION,
+            op_name='deletePublication',
+            variables={
+                'input': {
+                    'id': another_publication_id,
+                }
             }
-          }
         )
 
         self.assertResponseNoErrors(response)

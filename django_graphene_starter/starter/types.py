@@ -1,6 +1,7 @@
 from graphene import Field, Int
 from graphene.relay import Connection, Node
 from graphene_django import DjangoConnectionField, DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
 
 from .filters import ArticleFilter, PublicationFilter, ReporterFilter
 from .models import Article, Publication, Reporter
@@ -21,6 +22,7 @@ class CountableConnectionBase(Connection):
 
 
 class ReporterNode(DjangoObjectType):
+    articles = DjangoFilterConnectionField('starter.types.ArticleNode', description='Return a connection of Article.')
     dataloader_articles = DjangoConnectionField('starter.types.ArticleNode', description='Return Article connection which contains pagination and Article information using dataloader.')
 
     class Meta:
@@ -28,6 +30,11 @@ class ReporterNode(DjangoObjectType):
         interfaces = (Node,)
         filterset_class = ReporterFilter
         connection_class = CountableConnectionBase
+        fields = ['email', 'username', 'first_name', 'last_name', 'articles']
+
+    @staticmethod
+    def resolve_articles(root: Reporter, info, **kwargs):
+        return Article.objects.filter(reporter=root)
 
     @staticmethod
     def resolve_dataloader_articles(root: Reporter, info, **kwargs):

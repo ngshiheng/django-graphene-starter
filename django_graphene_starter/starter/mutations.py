@@ -1,5 +1,7 @@
+from django.contrib.auth.models import Permission
 from graphene import ID, ClientIDMutation, Field, String
 from graphql import GraphQLError
+from graphql_jwt.decorators import login_required, permission_required, staff_member_required
 from graphql_relay import from_global_id
 
 from .models import Article, Publication, Reporter
@@ -14,22 +16,33 @@ class CreateReporter(ClientIDMutation):
     class Input:
         first_name = String(required=True)
         last_name = String(required=True)
+        username = String(required=True)
         email = String(required=True)
+        password = String(required=True)
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
 
         first_name = input['first_name']
         last_name = input['last_name']
+        username = input['username']
         email = input['email']
+        password = input['password']
 
         reporter, created = Reporter.objects.get_or_create(
             email=email,
+            username=username,
             defaults={
                 'first_name': first_name,
                 'last_name': last_name,
             }
         )
+
+        permission = Permission.objects.get(name='Can change reporter')
+        reporter.user_permissions.add(permission)
+
+        reporter.set_password(password)
+        reporter.save()
 
         if not created:
             raise GraphQLError('Reporter already exist!')
@@ -38,6 +51,9 @@ class CreateReporter(ClientIDMutation):
 
 
 class UpdateReporter(ClientIDMutation):
+    """
+    A reporter can only update his/her own details if he/she has `Can change reporter` permission
+    """
     reporter = Field(ReporterNode)
 
     class Input:
@@ -47,11 +63,14 @@ class UpdateReporter(ClientIDMutation):
         email = String()
 
     @classmethod
+    @permission_required('starter.change_reporter')
     def mutate_and_get_payload(cls, root, info, **input):
 
         _, id = from_global_id(input['id'])
 
         reporter = Reporter.objects.get(id=id)
+
+        assert info.context.user.is_staff or info.context.user == reporter, 'Permission denied. You can only update your own account.'
 
         for field, value in input.items():
             if field != 'id':
@@ -70,6 +89,7 @@ class DeleteReporter(ClientIDMutation):
         id = ID(required=True, description='ID of the Reporter to be deleted.')
 
     @classmethod
+    @staff_member_required
     def mutate_and_get_payload(cls, root, info, **input):
 
         _, id = from_global_id(input['id'])
@@ -145,17 +165,14 @@ class CreateArticle(ClientIDMutation):
     article = Field(ArticleNode)
 
     class Input:
-        reporter_id = ID(required=True)
         headline = String(required=True)
 
     @classmethod
+    @login_required
     def mutate_and_get_payload(cls, root, info, **input):
-
         headline = input['headline']
 
-        _, reporter_id = from_global_id(input['reporter_id'])
-
-        reporter = Reporter.objects.get(id=reporter_id)
+        reporter = Reporter.objects.get(username=info.context.user.username)  # TODO: Find a better way to reference to Proxy user model
 
         article = Article.objects.create(headline=headline, reporter=reporter)
 
