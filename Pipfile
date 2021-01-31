@@ -18,6 +18,7 @@ django-filter = "*"
 django-graphql-jwt = "*"
 pyjwt = "<2.0.0"
 gunicorn = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.9"
