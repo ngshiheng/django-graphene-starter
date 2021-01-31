@@ -28,7 +28,7 @@ A GraphQL, Django server boilerplate built with Graphene.
 -   [x] Authentication and permission control
 -   [ ] Rate limiting
 -   [ ] Caching
--   [ ] Hosting
+-   [X] Hosting
 -   [ ] Many Articles -> Many Publications dataloader query (and reverse)
 
 # Getting Started
