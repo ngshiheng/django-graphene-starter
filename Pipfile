@@ -19,6 +19,8 @@ django-graphql-jwt = "*"
 pyjwt = "<2.0.0"
 gunicorn = "*"
 whitenoise = "*"
+psycopg2-binary = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.9"
