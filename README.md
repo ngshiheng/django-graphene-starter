@@ -49,6 +49,9 @@ pipenv run python django_graphene_starter/manage.py migrate
 
 # Run GraphQL server at localhost:8000
 pipenv run python3 django_graphene_starter/manage.py runserver
+
+# Run GraphQL server with gunicorn
+gunicorn --chdir django_graphene_starter django_graphene_starter.wsgi
 ```
 
 ### Queries and Mutation
