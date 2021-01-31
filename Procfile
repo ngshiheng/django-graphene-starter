@@ -1,1 +1,1 @@
-web: gunicorn myproject.wsgi
+web: gunicorn django_graphene_starter.django_graphene_starter.wsgi
