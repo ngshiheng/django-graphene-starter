@@ -148,4 +148,4 @@ AUTHENTICATION_BACKENDS = [
 
 
 RATELIMIT_VIEW = 'django_graphene_starter.views.ratelimited_error'
-RATELIMIT_RATE = os.environ.get('RATELIMIT_RATE', '10/m')
+RATELIMIT_RATE = os.environ.get('RATELIMIT_RATE', '5/s')
