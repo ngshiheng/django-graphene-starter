@@ -1,5 +1,6 @@
 import json
 
+from django.test import override_settings
 from django_graphene_starter.schema import schema
 from graphene_django.utils.testing import GraphQLTestCase
 from graphql_relay import to_global_id
@@ -130,6 +131,7 @@ mutation deleteArticle($input: DeleteArticleInput!) {
 '''
 
 
+@override_settings(RATELIMIT_ENABLE=False)
 class ArticleTestCase(GraphQLTestCase):
     GRAPHQL_SCHEMA = schema
     GRAPHQL_URL = '/graphql'

@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.models import Permission
+from django.test import override_settings
 from django_graphene_starter.schema import schema
 from graphene_django.utils.testing import GraphQLTestCase
 from graphql_relay import to_global_id
@@ -104,6 +105,7 @@ mutation deleteReporter($input: DeleteReporterInput!) {
 '''
 
 
+@override_settings(RATELIMIT_ENABLE=False)
 class ReporterTestCase(GraphQLTestCase):
     GRAPHQL_SCHEMA = schema
     GRAPHQL_URL = '/graphql'
