@@ -39,6 +39,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ratelimit.middleware.RatelimitMiddleware',
 ]
 
 ROOT_URLCONF = 'django_graphene_starter.urls'
@@ -123,6 +124,9 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
+# Graphene-Django
+# https://docs.graphene-python.org/projects/django/en/latest/
+
 GRAPHENE = {
     'RELAY_CONNECTION_MAX_LIMIT': 5000,
     'SCHEMA': 'django_graphene_starter.schema.schema',
@@ -134,7 +138,14 @@ GRAPHENE = {
     ],
 }
 
+# Django GraphQL JWT
+# https://django-graphql-jwt.domake.io/en/latest/
+
 AUTHENTICATION_BACKENDS = [
     'graphql_jwt.backends.JSONWebTokenBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+
+RATELIMIT_VIEW = 'django_graphene_starter.views.ratelimited_error'
+RATELIMIT_RATE = os.environ.get('RATELIMIT_RATE', '10/m')

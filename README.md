@@ -26,10 +26,9 @@ A GraphQL, Django server boilerplate built with Graphene.
 -   [x] Reporters -> Articles dataloader query
 -   [x] Articles -> Reporter dataloader query
 -   [x] Authentication and permission control
--   [ ] Rate limiting
+-   [x] Hosted on Heroku
+-   [x] Rate limiting
 -   [ ] Caching
--   [X] Hosting
--   [ ] Many Articles -> Many Publications dataloader query (and reverse)
 
 # Getting Started
 

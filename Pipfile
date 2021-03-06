@@ -21,6 +21,7 @@ gunicorn = "*"
 whitenoise = "*"
 psycopg2-binary = "*"
 dj-database-url = "*"
+django-ratelimit = "*"
 
 [requires]
 python_version = "3.9"
