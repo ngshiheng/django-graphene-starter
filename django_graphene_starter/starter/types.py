@@ -1,7 +1,10 @@
+from django.db.models.query import QuerySet
 from graphene import Field, Int
 from graphene.relay import Connection, Node
 from graphene_django import DjangoConnectionField, DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
+from graphql.execution.base import ResolveInfo
+from promise.promise import Promise
 
 from .filters import ArticleFilter, PublicationFilter, ReporterFilter
 from .models import Article, Publication, Reporter
@@ -14,7 +17,7 @@ class CountableConnectionBase(Connection):
         abstract = True
 
     @staticmethod
-    def resolve_total_count(root, *args, **kwargs):
+    def resolve_total_count(root, *args, **kwargs) -> int:
         if isinstance(root.iterable, list):
             return len(root.iterable)
 
@@ -33,11 +36,11 @@ class ReporterNode(DjangoObjectType):
         fields = ['email', 'username', 'first_name', 'last_name', 'articles']
 
     @staticmethod
-    def resolve_articles(root: Reporter, info, **kwargs):
+    def resolve_articles(root: Reporter, info: ResolveInfo, **kwargs) -> QuerySet:
         return Article.objects.filter(reporter=root)
 
     @staticmethod
-    def resolve_dataloader_articles(root: Reporter, info, **kwargs):
+    def resolve_dataloader_articles(root: Reporter, info: ResolveInfo, **kwargs) -> Promise:
         return info.context.loaders.articles_by_reporter_loader.load(root.id)
 
 
@@ -51,7 +54,7 @@ class PublicationNode(DjangoObjectType):
         connection_class = CountableConnectionBase
 
     @staticmethod
-    def resolve_dataloader_articles(root: Publication, info, **kwargs):
+    def resolve_dataloader_articles(root: Publication, info: ResolveInfo, **kwargs) -> Promise:
         return info.context.loaders.articles_by_publication_loader.load(root.id)
 
 
@@ -65,5 +68,5 @@ class ArticleNode(DjangoObjectType):
         connection_class = CountableConnectionBase
 
     @staticmethod
-    def resolve_dataloader_reporter(root: Article, info, **kwargs):
+    def resolve_dataloader_reporter(root: Article, info: ResolveInfo, **kwargs) -> Promise:
         return info.context.loaders.reporter_by_article_loader.load(root.id)

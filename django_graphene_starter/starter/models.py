@@ -8,7 +8,7 @@ class Reporter(User):
         proxy = True
         ordering = ['first_name']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username
 
 
@@ -18,7 +18,7 @@ class Publication(models.Model):
     class Meta:
         ordering = ['title']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
 
@@ -31,5 +31,5 @@ class Article(models.Model):
     class Meta:
         ordering = ['headline']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.headline

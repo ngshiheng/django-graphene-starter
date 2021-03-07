@@ -100,6 +100,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Logging
 
+DEBUG_PROPAGATE_EXCEPTIONS = True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

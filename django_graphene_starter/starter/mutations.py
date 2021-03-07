@@ -1,5 +1,5 @@
 from django.contrib.auth.models import Permission
-from graphene import ID, ClientIDMutation, Field, String
+from graphene import ID, ClientIDMutation, Field, ResolveInfo, String
 from graphql import GraphQLError
 from graphql_jwt.decorators import login_required, permission_required, staff_member_required
 from graphql_relay import from_global_id
@@ -21,7 +21,7 @@ class CreateReporter(ClientIDMutation):
         password = String(required=True)
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'CreateReporter':
 
         first_name = input['first_name']
         last_name = input['last_name']
@@ -64,7 +64,7 @@ class UpdateReporter(ClientIDMutation):
 
     @classmethod
     @permission_required('starter.change_reporter')
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'UpdateReporter':
 
         _, id = from_global_id(input['id'])
 
@@ -90,7 +90,7 @@ class DeleteReporter(ClientIDMutation):
 
     @classmethod
     @staff_member_required
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'DeleteReporter':
 
         _, id = from_global_id(input['id'])
 
@@ -109,7 +109,7 @@ class CreatePublication(ClientIDMutation):
         title = String(required=True)
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'CreatePublication':
 
         title = input['title']
 
@@ -126,7 +126,7 @@ class UpdatePublication(ClientIDMutation):
         title = String()
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'UpdatePublication':
 
         _, id = from_global_id(input['id'])
 
@@ -149,7 +149,7 @@ class DeletePublication(ClientIDMutation):
         id = ID(required=True, description='ID of the Publication to be deleted.')
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'DeletePublication':
 
         _, id = from_global_id(input['id'])
 
@@ -169,7 +169,7 @@ class CreateArticle(ClientIDMutation):
 
     @classmethod
     @login_required
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'CreateArticle':
         headline = input['headline']
 
         reporter = Reporter.objects.get(username=info.context.user.username)  # TODO: Find a better way to reference to Proxy user model
@@ -187,7 +187,7 @@ class UpdateArticle(ClientIDMutation):
         headline = String()
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'UpdateArticle':
 
         _, id = from_global_id(input['id'])
 
@@ -210,7 +210,7 @@ class DeleteArticle(ClientIDMutation):
         id = ID(required=True, description='ID of the Article to be deleted.')
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
+    def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'DeleteArticle':
 
         _, id = from_global_id(input['id'])
 

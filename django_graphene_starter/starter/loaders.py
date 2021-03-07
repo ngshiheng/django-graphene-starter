@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import List
 
 from graphene_django import DjangoObjectType
 from promise import Promise
@@ -9,7 +10,7 @@ from .models import Article, Reporter
 
 def generate_loader_by_many_to_many_key(Type: DjangoObjectType, attr: str):
     class Loader(DataLoader):
-        def batch_load_fn(self, keys: list) -> Promise:
+        def batch_load_fn(self, keys: List[str]) -> Promise:
             results_by_ids = defaultdict(list)
             lookup = {f'{attr}__id__in': keys}
 
@@ -46,7 +47,7 @@ def generate_loader_by_foreign_key(Type: DjangoObjectType, attr: str):
                         <Article: Proactive responsive customer loyalty>]})
         """
 
-        def batch_load_fn(self, keys: list) -> Promise:
+        def batch_load_fn(self, keys: List[str]) -> Promise:
 
             results_by_ids = defaultdict(list)
             lookup = {f'{attr}__in': keys}
@@ -63,13 +64,13 @@ def generate_loader_by_foreign_key(Type: DjangoObjectType, attr: str):
 def generate_loader(Type: DjangoObjectType, attr: str):
     class ReporterByIdLoader(DataLoader):
 
-        def batch_load_fn(self, keys):
+        def batch_load_fn(self, keys: List[str]):
             reporters = Reporter.objects.all().in_bulk(keys)
             return Promise.resolve([reporters.get(reporter_id) for reporter_id in keys])
 
     class ArticleByIdLoader(DataLoader):
 
-        def batch_load_fn(self, keys):
+        def batch_load_fn(self, keys: List[str]):
             article = Article.objects.in_bulk(keys)
             return Promise.resolve([article.get(key) for key in keys])
 
@@ -78,8 +79,8 @@ def generate_loader(Type: DjangoObjectType, attr: str):
         Example case of query Many Articles to One Reporter for each Article
         """
 
-        def batch_load_fn(self, keys):
-            def with_articles(articles):
+        def batch_load_fn(self, keys: List[str]):
+            def with_articles(articles: list):
                 reporter_ids = [article.reporter_id for article in articles]
                 return ReporterByIdLoader().load_many(reporter_ids)
 
