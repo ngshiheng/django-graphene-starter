@@ -22,6 +22,7 @@ whitenoise = "*"
 psycopg2-binary = "*"
 dj-database-url = "*"
 django-ratelimit = "*"
+colorlog = "*"
 
 [requires]
 python_version = "3.9"
