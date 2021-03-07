@@ -11,7 +11,7 @@ __pycache__/
 env/
 build/
 develop-eggs/
-dist/
+dist/x
 downloads/
 eggs/
 .eggs/
@@ -53,6 +53,8 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
+staticfiles/
+static/
 
 # Flask stuff:
 instance/
