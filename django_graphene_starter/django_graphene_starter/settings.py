@@ -183,5 +183,3 @@ RATELIMIT_RATE = os.environ.get('RATELIMIT_RATE', '5/s')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
