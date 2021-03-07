@@ -1,4 +1,9 @@
-def get_client_ip(request):
+from typing import Union
+
+from django.http import HttpRequest
+
+
+def get_client_ip(request: HttpRequest) -> Union[str, None]:
     """
     Get the Client's IP address from request headers
     """
