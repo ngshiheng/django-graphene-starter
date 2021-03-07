@@ -22,7 +22,7 @@ class HelloView(View):
     """
 
     def get(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        logger.info(f'Client with IP Address {get_client_ip(request)} is saying hi!')
+        logger.warning(f'Client with IP Address {get_client_ip(request)} is saying hello!')
         return JsonResponse({'message': 'Hello, 世界!'})
 
 
