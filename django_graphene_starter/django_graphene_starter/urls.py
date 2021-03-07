@@ -9,3 +9,6 @@ urlpatterns = [
     path('graphql', csrf_exempt(RateLimitedGraphQLView.as_view(graphiql=True))),
     path('hello', HelloView.as_view()),
 ]
+
+
+handler404 = 'django_graphene_starter.views.custom_page_not_found_view'

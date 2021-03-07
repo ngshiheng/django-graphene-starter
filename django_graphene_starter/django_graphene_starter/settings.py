@@ -51,7 +51,7 @@ ROOT_URLCONF = 'django_graphene_starter.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'django_graphene_starter', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,6 +63,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'django_graphene_starter.wsgi.application'
 
@@ -180,6 +181,6 @@ RATELIMIT_RATE = os.environ.get('RATELIMIT_RATE', '5/s')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'django_graphene_starter', 'static')
 
 STATIC_URL = '/static/'

@@ -3,7 +3,8 @@ from typing import Union
 
 from django.conf import settings
 from django.http.request import HttpRequest
-from django.http.response import JsonResponse
+from django.http.response import HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 from graphene_django.views import GraphQLView
@@ -43,3 +44,7 @@ def ratelimited_error(request: HttpRequest, exception: Exception) -> JsonRespons
 
     logger.warning(f'Client with IP Address {get_client_ip(request)} is making requests exceeding the rate limit of {settings.RATELIMIT_RATE}!')
     return JsonResponse({'error': 'You are making too many requests! Slow down and enjoy the moment you’re in.'}, status=429)
+
+
+def custom_page_not_found_view(request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    return render(request, '404.html', status=404)
