@@ -10,6 +10,7 @@ from django.views.generic import View
 from graphene_django.views import GraphQLView
 from graphql.execution.base import ExecutionResult
 from ratelimit.decorators import ratelimit
+from sentry_sdk import capture_exception
 
 from django_graphene_starter.utils import get_client_ip
 
@@ -28,13 +29,21 @@ class HelloView(View):
 
 
 @method_decorator(ratelimit(key='user_or_ip', rate=settings.RATELIMIT_RATE, method=ratelimit.ALL, block=True), name='execute_graphql_request')
-class RateLimitedGraphQLView(GraphQLView):
+class SentryGraphQLView(GraphQLView):
     """
     A basic rate limited GraphQLView
     """
 
     def execute_graphql_request(self, request: HttpRequest, *args, **kwargs) -> Union[ExecutionResult, None]:
-        return super().execute_graphql_request(request, *args, **kwargs)
+        result = super().execute_graphql_request(request, *args, **kwargs)
+        if result.errors:
+            for error in result.errors:
+                try:
+                    raise error.original_error
+
+                except Exception as e:
+                    capture_exception(e)
+        return result
 
 
 def ratelimited_error(request: HttpRequest, exception: Exception) -> JsonResponse:
