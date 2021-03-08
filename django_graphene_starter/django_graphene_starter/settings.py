@@ -16,13 +16,14 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET', 'developmentsecret')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', '0') == '1'
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django-graphene-starter.herokuapp.com']
 
 
 # Application definition
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -182,5 +184,3 @@ RATELIMIT_RATE = os.environ.get('RATELIMIT_RATE', '5/s')
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'django_graphene_starter', 'static')
-
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
