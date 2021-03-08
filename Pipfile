@@ -23,6 +23,7 @@ dj-database-url = "*"
 django-ratelimit = "*"
 colorlog = "*"
 dj-static = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.9"

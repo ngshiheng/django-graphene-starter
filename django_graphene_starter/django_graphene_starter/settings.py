@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
 
+import sentry_sdk
 from colorlog import ColoredFormatter
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -135,6 +137,18 @@ LOGGING = {
         },
     },
 }
+
+# Sentry
+sentry_sdk.init(
+    dsn="https://914169a8f89542f1a5f3d64c8146f654@o545253.ingest.sentry.io/5666854",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
