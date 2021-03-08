@@ -181,8 +181,10 @@ RATELIMIT_RATE = os.environ.get('RATELIMIT_RATE', '5/s')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'django_graphene_starter', 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'django_graphene_starter', 'staticfiles')
 
 STATIC_URL = '/static/'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'django_graphene_starter', 'static'),
+)
