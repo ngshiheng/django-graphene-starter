@@ -4,6 +4,7 @@ from pathlib import Path
 import sentry_sdk
 from colorlog import ColoredFormatter
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import ignore_logger
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,10 +19,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET', 'developmentsecret')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', '0') == '1'
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django-graphene-starter.herokuapp.com']
 
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'production')
 
 # Application definition
 INSTALLED_APPS = [
@@ -143,11 +145,11 @@ sentry_sdk.init(
     dsn="https://914169a8f89542f1a5f3d64c8146f654@o545253.ingest.sentry.io/5666854",
     integrations=[DjangoIntegration()],
     traces_sample_rate=1.0,
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
+    send_default_pii=True,
+    environment=ENVIRONMENT,
 )
+
+ignore_logger('graphql.execution.utils')
 
 
 # Internationalization
