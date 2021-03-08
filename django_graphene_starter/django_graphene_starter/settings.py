@@ -184,7 +184,3 @@ RATELIMIT_RATE = os.environ.get('RATELIMIT_RATE', '5/s')
 STATIC_ROOT = os.path.join(BASE_DIR, 'django_graphene_starter', 'staticfiles')
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'django_graphene_starter', 'static'),
-)
