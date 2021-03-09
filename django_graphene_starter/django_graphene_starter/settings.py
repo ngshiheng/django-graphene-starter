@@ -19,11 +19,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET', 'developmentsecret')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', '0') == '1'
+DEBUG = os.environ.get('DEBUG', '1') == '1'
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django-graphene-starter.herokuapp.com']
 
-ENVIRONMENT = os.environ.get('ENVIRONMENT', 'production')
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
 
 # Application definition
 INSTALLED_APPS = [
@@ -175,6 +175,7 @@ GRAPHENE = {
         'graphene_django.debug.DjangoDebugMiddleware',
         'django_graphene_starter.middlewares.LoaderMiddleware',
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
+        'django_graphene_starter.middlewares.SentryMiddleware',
     ],
 }
 
