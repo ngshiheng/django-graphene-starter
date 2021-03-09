@@ -20,6 +20,7 @@ A GraphQL, Django server boilerplate built with Graphene.
 -   [python](https://www.python.org/)
 -   [django](https://www.djangoproject.com/)
 -   [graphene](https://docs.graphene-python.org/projects/django/en/latest/)
+-   [sentry](https://sentry.io/)
 
 ## Features
 
@@ -27,7 +28,9 @@ A GraphQL, Django server boilerplate built with Graphene.
 -   [x] Articles -> Reporter dataloader query
 -   [x] Authentication and permission control
 -   [x] Hosted on Heroku
+-   [x] Sentry integration
 -   [x] Rate limiting
+-   [x] Tested with Pytest
 -   [ ] Caching
 
 # Getting Started
@@ -79,8 +82,15 @@ pipenv run pytest django_graphene_starter
 
 # References
 
+## Dataloader
+
+-   https://medium.com/open-graphql/solving-n-1-problem-with-dataloader-in-python-graphene-django-7a75d6c259ba
 -   https://github.com/mirumee/saleor/blob/master/saleor/product/models.py#L452
 -   https://github.com/mirumee/saleor/blob/master/saleor/graphql/product/dataloaders/products.py#L41
+
+## Sentry
+
+-   https://github.com/graphql-python/graphene-django/issues/124
 
 # Contributing
 

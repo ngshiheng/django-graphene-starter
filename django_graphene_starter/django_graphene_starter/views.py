@@ -10,7 +10,6 @@ from django.views.generic import View
 from graphene_django.views import GraphQLView
 from graphql.execution.base import ExecutionResult
 from ratelimit.decorators import ratelimit
-from sentry_sdk import capture_exception
 
 from django_graphene_starter.utils import get_client_ip
 
@@ -24,36 +23,32 @@ class HelloView(View):
     """
 
     def get(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        logger.info(f'Client with IP Address {get_client_ip(request)} is saying hello!')
+        ip_address = get_client_ip(request)
+        logger.info(f'Client {ip_address} is saying hello!', extra=dict(ip_address=ip_address))
         return JsonResponse({'message': 'Hello, 世界!'})
 
 
 @method_decorator(ratelimit(key='user_or_ip', rate=settings.RATELIMIT_RATE, method=ratelimit.ALL, block=True), name='execute_graphql_request')
-class SentryGraphQLView(GraphQLView):
+class RateLimitedGraphQLView(GraphQLView):
     """
     A basic rate limited GraphQLView
     """
 
     def execute_graphql_request(self, request: HttpRequest, *args, **kwargs) -> Union[ExecutionResult, None]:
-        result = super().execute_graphql_request(request, *args, **kwargs)
-        if result.errors:
-            for error in result.errors:
-                try:
-                    raise error.original_error
-
-                except Exception as e:
-                    capture_exception(e)
-        return result
+        return super().execute_graphql_request(request, *args, **kwargs)
 
 
 def ratelimited_error(request: HttpRequest, exception: Exception) -> JsonResponse:
     """
     Returns rate limit error to the client if
     """
-
-    logger.warning(f'Client with IP Address {get_client_ip(request)} is making requests exceeding the rate limit of {settings.RATELIMIT_RATE}!')
+    ip_address = get_client_ip(request)
+    logger.warning(f'Client with IP Address {ip_address} is making requests exceeding the rate limit of {settings.RATELIMIT_RATE}!', extra=dict(ip_address=ip_address, ratelimit_rate=settings.RATELIMIT_RATE))
     return JsonResponse({'error': 'You are making too many requests! Slow down and enjoy the moment you’re in.'}, status=429)
 
 
 def custom_page_not_found_view(request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    """
+    A custom 404 page
+    """
     return render(request, '404.html', status=404)
