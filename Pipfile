@@ -10,6 +10,7 @@ pytest-django = "*"
 mixer = "*"
 pytest-cov = "*"
 flake8 = "*"
+werkzeug = "*"
 
 [packages]
 django = "*"
@@ -24,6 +25,7 @@ django-ratelimit = "*"
 colorlog = "*"
 dj-static = "*"
 sentry-sdk = "*"
+django-extensions = "*"
 
 [requires]
 python_version = "3.9"
