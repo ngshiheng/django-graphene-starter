@@ -135,9 +135,9 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django': {
+        'django.server': {
             'handlers': ['console'],
-            'level': 'WARNING',
+            'level': 'DEBUG' if DEBUG else 'INFO',
         },
         'django.db.backends': {
             'handlers': ['console'],
