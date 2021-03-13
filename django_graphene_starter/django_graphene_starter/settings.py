@@ -137,6 +137,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
+            'level': 'WARNING',
         },
         'django.db.backends': {
             'handlers': ['console'],
@@ -144,11 +145,11 @@ LOGGING = {
         },
         'django.utils.autoreload': {
             'level': 'WARNING',  # Always set to 'ERROR" unless required
-        }
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG' if DEBUG else 'INFO',
+        },
+        'django_graphene_starter.schema': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+        },
     },
 }
 
@@ -186,8 +187,8 @@ GRAPHENE = {
     'SCHEMA_OUTPUT': 'schema.graphql',
     'MIDDLEWARE': [
         'graphene_django.debug.DjangoDebugMiddleware',
-        'django_graphene_starter.middlewares.LoaderMiddleware',
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
+        'django_graphene_starter.middlewares.LoaderMiddleware',
         'django_graphene_starter.middlewares.SentryMiddleware',
     ],
 }
