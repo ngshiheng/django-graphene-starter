@@ -10,6 +10,7 @@ from django.views.generic import View
 from graphene_django.views import GraphQLView
 from graphql.execution.base import ExecutionResult
 from ratelimit.decorators import ratelimit
+from sentry_sdk.api import start_transaction
 
 from django_graphene_starter.utils import get_client_ip
 
@@ -24,7 +25,7 @@ class HelloView(View):
 
     def get(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
         ip_address = get_client_ip(request)
-        logger.info(f'Client {ip_address} is saying hello!', extra=dict(ip_address=ip_address))
+        logger.debug(f'Client {ip_address} is saying hello!', extra=dict(ip_address=ip_address))
         return JsonResponse({'message': 'Hello, 世界!'})
 
 
@@ -34,8 +35,14 @@ class RateLimitedGraphQLView(GraphQLView):
     A basic rate limited GraphQLView
     """
 
-    def execute_graphql_request(self, request: HttpRequest, *args, **kwargs) -> Union[ExecutionResult, None]:
-        return super().execute_graphql_request(request, *args, **kwargs)
+    def execute_graphql_request(self, request: HttpRequest, data, query, variables, operation_name, show_graphiql) -> Union[ExecutionResult, None]:
+        """
+        This will run once per GraphQL request
+        """
+        operation_type = self.get_backend(request).document_from_string(self.schema, query).get_operation_type(operation_name)
+
+        with start_transaction(op=operation_type, name=operation_name):
+            return super().execute_graphql_request(request, data, query, variables, operation_name, show_graphiql)
 
 
 def ratelimited_error(request: HttpRequest, exception: Exception) -> JsonResponse:

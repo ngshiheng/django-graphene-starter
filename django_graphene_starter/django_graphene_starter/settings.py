@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'graphene_django',
     'starter',
 ]
@@ -103,6 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Logging
+# https://docs.djangoproject.com/en/3.1/topics/logging/
 DEBUG_PROPAGATE_EXCEPTIONS = True
 LOGGING = {
     'version': 1,
@@ -129,18 +131,29 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'colored_formatter',
-            'level': 'INFO',
+            'level': 'DEBUG' if DEBUG else 'INFO',
         },
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'INFO',
         },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # Set this to 'DEBUG' to print SQL statements
+        },
+        'django.utils.autoreload': {
+            'level': 'WARNING',  # Always set to 'ERROR" unless required
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG' if DEBUG else 'INFO',
     },
 }
 
 # Sentry
+# https://docs.sentry.io/platforms/python/guides/django/
 sentry_sdk.init(
     dsn="https://914169a8f89542f1a5f3d64c8146f654@o545253.ingest.sentry.io/5666854",
     integrations=[DjangoIntegration()],

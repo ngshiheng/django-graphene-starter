@@ -22,7 +22,6 @@ class CreateReporter(ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'CreateReporter':
-
         first_name = input['first_name']
         last_name = input['last_name']
         username = input['username']
@@ -65,7 +64,6 @@ class UpdateReporter(ClientIDMutation):
     @classmethod
     @permission_required('starter.change_reporter')
     def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'UpdateReporter':
-
         _, id = from_global_id(input['id'])
 
         reporter = Reporter.objects.get(id=id)
@@ -91,7 +89,6 @@ class DeleteReporter(ClientIDMutation):
     @classmethod
     @staff_member_required
     def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'DeleteReporter':
-
         _, id = from_global_id(input['id'])
 
         reporter = Reporter.objects.get(id=id)
@@ -110,7 +107,6 @@ class CreatePublication(ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'CreatePublication':
-
         title = input['title']
 
         publication = Publication.objects.create(title=title)
@@ -127,7 +123,6 @@ class UpdatePublication(ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'UpdatePublication':
-
         _, id = from_global_id(input['id'])
 
         publication = Publication.objects.get(id=id)
@@ -150,7 +145,6 @@ class DeletePublication(ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'DeletePublication':
-
         _, id = from_global_id(input['id'])
 
         publication = Publication.objects.get(id=id)
@@ -188,7 +182,6 @@ class UpdateArticle(ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'UpdateArticle':
-
         _, id = from_global_id(input['id'])
 
         article = Article.objects.get(id=id)
@@ -211,7 +204,6 @@ class DeleteArticle(ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info: ResolveInfo, **input) -> 'DeleteArticle':
-
         _, id = from_global_id(input['id'])
 
         article = Article.objects.get(id=id)

@@ -43,22 +43,34 @@ pipenv install --dev
 
 ## How to Use
 
-### Local Development
+### Run Development Server Locally
 
 ```sh
 # Database migration
-pipenv run python django_graphene_starter/manage.py migrate
+pipenv run python3 django_graphene_starter/manage.py migrate
 
-# Run GraphQL server at localhost:8000
+# Run GraphQL server at localhost:8000 by default
 pipenv run python3 django_graphene_starter/manage.py runserver
 
 # Run GraphQL server with gunicorn
 gunicorn --chdir django_graphene_starter django_graphene_starter.wsgi
 ```
 
+### Run Shell Locally
+
+```sh
+pipenv run python3 django_graphene_starter/manage.py shell_plus
+```
+
+### List Model Info
+
+```sh
+python3 django_graphene_starter/manage.py list_model_info --field-class
+```
+
 ### Queries and Mutation
 
-[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Django%20Graphene%20Starter&uri=https%3A%2F%2Fgist.githubusercontent.com%2Fngshiheng%2Fad28bbf3147427111fe28d69e3e62fef%2Fraw%2F73d17639922902f5107b65df8438a448b269fc69%2Finsomnia_data.json)
+[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Django%20Graphene%20Starter&uri=https%3A%2F%2Fgist.githubusercontent.com%2Fngshiheng%2F210e746ea69c7b0420e8172893eaa78c%2Fraw%2Fe82e43ecea65018a45741c36b8115d3fd334ff85%2Fgraphene_django_starter.json)
 
 Read more about using Insomnia for API development [here](https://medium.com/swlh/fast-track-your-api-development-with-insomnia-rest-client-d02521c31b9d).
 
