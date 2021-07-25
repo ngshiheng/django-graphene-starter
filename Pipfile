@@ -13,7 +13,7 @@ flake8 = "*"
 werkzeug = "*"
 
 [packages]
-django = "*"
+django = "<3.2"
 graphene-django = "*"
 django-filter = "*"
 django-graphql-jwt = "*"
