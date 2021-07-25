@@ -26,6 +26,7 @@ colorlog = "*"
 dj-static = "*"
 sentry-sdk = "*"
 django-extensions = "*"
+django-silk = "*"
 
 [requires]
 python_version = "3.9"
