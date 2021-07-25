@@ -49,6 +49,8 @@ def ratelimited_error(request: HttpRequest, exception: Exception) -> JsonRespons
     """
     Returns rate limit error to the client if
     """
+    del exception  # Unused.
+
     ip_address = get_client_ip(request)
     logger.warning(f'Client with IP Address {ip_address} is making requests exceeding the rate limit of {settings.RATELIMIT_RATE}!', extra=dict(ip_address=ip_address, ratelimit_rate=settings.RATELIMIT_RATE))
     return JsonResponse({'error': 'You are making too many requests! Slow down and enjoy the moment you’re in.'}, status=429)
