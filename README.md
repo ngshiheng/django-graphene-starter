@@ -33,6 +33,8 @@ A GraphQL, Django server boilerplate built with Graphene.
 -   [x] Tested with Pytest
 -   [ ] Caching
 
+---
+
 # Getting Started
 
 ## Installing Dependencies
@@ -92,6 +94,8 @@ python django_graphene_starter/manage.py flush
 pipenv run pytest django_graphene_starter
 ```
 
+---
+
 # References
 
 ## Dataloader
@@ -104,9 +108,20 @@ pipenv run pytest django_graphene_starter
 
 -   https://github.com/graphql-python/graphene-django/issues/124
 
+---
+
 # Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change
+
+## Setup Pre-commit Hooks
+
+Before you begin your development work, make sure you have installed [pre-commit hooks](https://pre-commit.com/index.html#installation).
+
+Some example useful invocations:
+
+-   `pre-commit install`: Default invocation. Installs the pre-commit script alongside any existing git hooks.
+-   `pre-commit install --install-hooks --overwrite`: Idempotently replaces existing git hook scripts with pre-commit, and also installs hook environments
 
 ## Steps
 

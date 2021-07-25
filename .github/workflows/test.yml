@@ -26,8 +26,9 @@ jobs:
 
             - name: Run checks
               run: |
-                  pipenv run flake8 --max-line-length=255 --statistics --show-source
+                  pipenv run flake8 --statistics --show-source
                   pipenv run pytest django_graphene_starter
+                  pipenv run python3 django_graphene_starter/manage.py check
 
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v1
