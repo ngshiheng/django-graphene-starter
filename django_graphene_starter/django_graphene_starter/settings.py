@@ -158,7 +158,7 @@ LOGGING = {
 # Sentry
 # https://docs.sentry.io/platforms/python/guides/django/
 sentry_sdk.init(
-    dsn="https://914169a8f89542f1a5f3d64c8146f654@o545253.ingest.sentry.io/5666854",
+    dsn=os.environ.get('SENTRY_DSN'),
     integrations=[DjangoIntegration()],
     traces_sample_rate=1.0,
     send_default_pii=True,
