@@ -40,7 +40,7 @@ A GraphQL, Django server boilerplate built with Graphene.
 ## Installing Dependencies
 
 ```sh
-pipenv install --dev
+pipenv sync --dev
 ```
 
 ## How to Use
