@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+    app:
+        container_name: django_graphene_starter
+        build:
+            context: .
+        command: pipenv run python3 django_graphene_starter/manage.py runserver 0.0.0.0:8000
+        volumes:
+            - ./app
+        ports:
+            - "8000:8000"
