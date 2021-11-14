@@ -45,6 +45,14 @@ pipenv sync --dev
 
 ## How to Use
 
+### Optional: Docker
+
+To run this project with [docker](https://www.docker.com/):
+
+```sh
+docker-compose up -d --build
+```
+
 ### Run Development Server Locally
 
 ```sh
