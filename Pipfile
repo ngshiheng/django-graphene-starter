@@ -11,6 +11,7 @@ mixer = "*"
 pytest-cov = "*"
 flake8 = "*"
 werkzeug = "*"
+pre-commit = "*"
 
 [packages]
 django = "<3.2"
