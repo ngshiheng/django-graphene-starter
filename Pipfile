@@ -14,7 +14,7 @@ werkzeug = "*"
 pre-commit = "*"
 
 [packages]
-django = "<3.2"
+django = "==3.2.11"
 graphene-django = "*"
 django-filter = "*"
 django-graphql-jwt = "*"
