@@ -31,7 +31,7 @@ jobs:
                   pipenv run python3 django_graphene_starter/manage.py check
 
             - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v1
+              uses: codecov/codecov-action@v2
               with:
                   files: ./coverage.xml
                   directory: .
