@@ -29,8 +29,9 @@ A GraphQL, Django server boilerplate built with Graphene.
 -   [x] Authentication and permission control
 -   [x] Hosted on Heroku
 -   [x] Sentry integration
--   [x] Rate limiting
 -   [x] Tested with Pytest
+-   [x] Basic rate limiting
+-   [x] Renovate bot
 -   [ ] Caching
 
 ---
